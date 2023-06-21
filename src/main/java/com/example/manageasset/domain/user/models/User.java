@@ -2,6 +2,7 @@ package com.example.manageasset.domain.user.models;
 
 import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.models.Millisecond;
+import com.example.manageasset.infrastructure.user.repositories.DepartmentEntity;
 import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,8 +26,9 @@ public class User {
     private Millisecond createdAt;
     private Millisecond updatedAt;
     private Boolean isDeleted;
+    private Department department;
 
-    public User(String fullName, String address, String email, String mobile, Boolean sex, String dateOfBirth, String username, String password, String position, String avatar, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted) {
+    public User(String fullName, String address, String email, String mobile, Boolean sex, String dateOfBirth, String username, String password, String position, String avatar, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted, Department department) {
         this.fullName = fullName;
         this.address = address;
         this.email = email;
@@ -40,11 +42,12 @@ public class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isDeleted = isDeleted;
+        this.department = department;
     }
 
-    public static User create(String fullName, String address, String email, String mobile, Boolean sex, String dateOfBirth, String username, String password, String position, String avatar){
+    public static User create(String fullName, String address, String email, String mobile, Boolean sex, String dateOfBirth, String username, String password, String position, String avatar, Department department){
         validate(fullName, address ,email, mobile, sex, dateOfBirth, username, password, position, avatar);
-        return new User(fullName, address, email, mobile, sex, dateOfBirth, username, password, position, avatar, Millisecond.now(), Millisecond.now(), false);
+        return new User(fullName, address, email, mobile, sex, dateOfBirth, username, password, position, avatar, Millisecond.now(), Millisecond.now(), false, department);
     }
 
     public static void validate(String fullName, String address, String email, String mobile, Boolean sex, String dateOfBirth, String username, String password, String position, String avatar){
