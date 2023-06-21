@@ -40,6 +40,6 @@ public class UserEntity {
     private Timestamp createdAt;
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
-    @Column(name = "is_delete", nullable = false)
-    private Boolean isDelete;
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
 }
