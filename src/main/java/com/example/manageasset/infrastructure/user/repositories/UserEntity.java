@@ -1,5 +1,7 @@
 package com.example.manageasset.infrastructure.user.repositories;
 
+import com.example.manageasset.domain.shared.models.Millisecond;
+import com.example.manageasset.domain.user.models.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,7 +30,7 @@ public class UserEntity {
     private Boolean sex;
     @Column(name = "date_of_birth", nullable = false)
     private String dateOfBirth;
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
     @Column(name = "password", nullable = false)
     private String password;
@@ -40,6 +42,49 @@ public class UserEntity {
     private Timestamp createdAt;
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
-    @Column(name = "is_delete", nullable = false)
-    private Boolean isDelete;
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "department_id", nullable = false)
+    private DepartmentEntity departmentEntity;
+
+    public static UserEntity fromModel(User user){
+        return new UserEntity(
+                user.getId(),
+                user.getFullName(),
+                user.getAddress(),
+                user.getEmail(),
+                user.getMobile(),
+                user.getSex(),
+                user.getDateOfBirth(),
+                user.getUsername(),
+                user.getPassword(),
+                user.getPosition(),
+                user.getAvatar(),
+                new Timestamp(user.getCreatedAt().asLong()),
+                new Timestamp(user.getUpdatedAt().asLong()),
+                user.getIsDeleted(),
+                DepartmentEntity.fromModel(user.getDepartment())
+        );
+    }
+    public User toModel(){
+        return new User(
+                id,
+                fullName,
+                address,
+                email,
+                mobile,
+                sex,
+                dateOfBirth,
+                username,
+                password,
+                position,
+                avatar,
+                new Millisecond(createdAt.getTime()),
+                new Millisecond(updatedAt.getTime()),
+                isDeleted,
+                departmentEntity.toModel()
+        );
+    }
 }
