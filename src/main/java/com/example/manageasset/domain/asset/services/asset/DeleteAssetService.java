@@ -1,4 +1,4 @@
-package com.example.manageasset.domain.asset.services;
+package com.example.manageasset.domain.asset.services.asset;
 
 import com.example.manageasset.domain.asset.models.Asset;
 import com.example.manageasset.domain.asset.repositories.AssetRepository;
@@ -14,8 +14,9 @@ public class DeleteAssetService {
     public void delete(Long id) throws NotFoundException {
         Asset asset = assetRepository.getById(id);
         if(asset == null) {
-            throw new NotFoundException("Asset not found");
+            throw new NotFoundException(String.format("Asset[id=%d] not found", id));
         }
-        assetRepository.delete(id);
+        asset.delete();
+        assetRepository.save(asset);
     }
 }

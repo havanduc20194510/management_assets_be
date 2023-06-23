@@ -1,4 +1,4 @@
-package com.example.manageasset.domain.asset.services;
+package com.example.manageasset.domain.asset.services.category;
 
 import com.example.manageasset.domain.asset.dtos.CategoryDto;
 import com.example.manageasset.domain.asset.models.Category;
@@ -15,7 +15,7 @@ public class UpdateCategoryService {
     public void update(CategoryDto categoryDto) throws NotFoundException {
         Category category = categoryRepository.getById(categoryDto.getId());
         if(category == null) {
-            throw new NotFoundException("Category not found");
+            throw new NotFoundException(String.format("Category[id=%d] not found", categoryDto.getId()));
         }
         category.update(categoryDto.getName());
         categoryRepository.save(category);

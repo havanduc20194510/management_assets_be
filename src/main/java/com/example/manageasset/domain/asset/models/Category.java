@@ -2,10 +2,10 @@ package com.example.manageasset.domain.asset.models;
 
 import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.models.Millisecond;
+import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
 
 @Data
 @NoArgsConstructor
@@ -36,8 +36,13 @@ public class Category {
     }
 
     private static void validate(String name) {
-        if (!StringUtils.hasLength(name)) {
+        if (Strings.isNullOrEmpty(name)) {
             throw new InvalidDataException("Required field [name]");
         }
+    }
+
+    public void delete(){
+        this.updatedAt = Millisecond.now();
+        this.isDeleted = true;
     }
 }

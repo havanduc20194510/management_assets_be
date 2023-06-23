@@ -1,4 +1,4 @@
-package com.example.manageasset.domain.asset.services;
+package com.example.manageasset.domain.asset.services.category;
 
 import com.example.manageasset.domain.asset.dtos.CategoryDto;
 import com.example.manageasset.domain.asset.models.Category;
@@ -23,7 +23,7 @@ public class GetAllCategoryService {
         PagingPayload.PagingPayloadBuilder<List<CategoryDto>> payloadBuilder = PagingPayload.builder();
         payloadBuilder.data(categoryDtos);
         payloadBuilder.page(page);
-        payloadBuilder.size(limit);
+        payloadBuilder.limit(limit);
         payloadBuilder.total(categoryRepository.countTotal(searchText));
         return payloadBuilder.build();
     }

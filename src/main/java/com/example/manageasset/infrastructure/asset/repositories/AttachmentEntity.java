@@ -17,7 +17,7 @@ public class AttachmentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "source", nullable = false)
+    @Column(name = "source", nullable = false, length = 1000)
     private String source;
     @Column(name = "mime", nullable = false)
     private String mime;
