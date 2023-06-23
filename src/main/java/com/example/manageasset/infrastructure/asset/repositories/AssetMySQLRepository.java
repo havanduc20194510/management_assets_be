@@ -18,15 +18,15 @@ public class AssetMySQLRepository implements AssetRepository {
     private final AssetJpa assetJpa;
 
     @Override
-    public List<Asset> getAll(QueryFilter queryFilter, String searchText) {
+    public List<Asset> getAll(QueryFilter queryFilter, String searchText, Long categoryId) {
         Pageable pageable = PageRequest.of(queryFilter.getPage(), queryFilter.getLimit(),
                 queryFilter.getSort().equals("asc") ? Sort.by("updatedAt").ascending() : Sort.by("updatedAt").descending());
-        return assetJpa.findAll(pageable, searchText).stream().map(AssetEntity::toModel).collect(Collectors.toList());
+        return assetJpa.findAll(pageable, searchText, categoryId).stream().map(AssetEntity::toModel).collect(Collectors.toList());
     }
 
     @Override
-    public Long countTotal(String searchText) {
-        return assetJpa.countTotal(searchText);
+    public Long countTotal(String searchText, Long categoryId) {
+        return assetJpa.countTotal(searchText, categoryId);
     }
 
     @Override

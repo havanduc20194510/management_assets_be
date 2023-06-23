@@ -22,8 +22,9 @@ public class GetAllAssetController {
     public ResponseEntity<?> list(@RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
                                   @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
                                   @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
+                                  @RequestParam(value = "category_id", required = false) Long categoryId,
                                   @RequestParam(value = "key", required = false) String searchText) {
-        PagingPayload<List<AssetDto>> result = getAllAssetService.getAll(limit, page, sort, searchText);
+        PagingPayload<List<AssetDto>> result = getAllAssetService.getAll(limit, page, sort, searchText, categoryId);
         return new ResponseEntity<>(new ResponseBody(result, ResponseBody.Status.SUCCESS, ResponseBody.Code.SUCCESS), HttpStatus.OK);
     }
 }

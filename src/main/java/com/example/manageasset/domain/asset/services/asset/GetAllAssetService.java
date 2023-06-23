@@ -16,15 +16,15 @@ import java.util.stream.Collectors;
 public class GetAllAssetService {
     private final AssetRepository assetRepository;
 
-    public PagingPayload<List<AssetDto>> getAll(Integer limit, Integer page, String sort, String searchText) {
+    public PagingPayload<List<AssetDto>> getAll(Integer limit, Integer page, String sort, String searchText, Long categoryId) {
         QueryFilter filter = QueryFilter.create(limit, page, sort);
-        List<Asset> assets = assetRepository.getAll(filter, searchText);
+        List<Asset> assets = assetRepository.getAll(filter, searchText, categoryId);
         List<AssetDto> assetDtos = assets.stream().map(AssetDto::fromModel).collect(Collectors.toList());
         PagingPayload.PagingPayloadBuilder<List<AssetDto>> payloadBuilder = PagingPayload.builder();
         payloadBuilder.data(assetDtos);
         payloadBuilder.page(page);
         payloadBuilder.limit(limit);
-        payloadBuilder.total(assetRepository.countTotal(searchText));
+        payloadBuilder.total(assetRepository.countTotal(searchText, categoryId));
         return payloadBuilder.build();
     }
 }
