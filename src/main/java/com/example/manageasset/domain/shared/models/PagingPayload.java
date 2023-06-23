@@ -13,7 +13,7 @@ public class PagingPayload<T> {
     private T data;
     private Long total;
     private Integer page;
-    private Integer size;
+    private Integer limit;
 
     public static PagingPayload empty() {
         return PagingPayload.builder().build();

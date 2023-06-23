@@ -5,7 +5,7 @@ import com.example.manageasset.domain.shared.exceptions.NotFoundException;
 import com.example.manageasset.domain.shared.models.PagingPayload;
 import com.example.manageasset.domain.shared.models.ResponseBody;
 import com.example.manageasset.domain.user.dtos.UserDto;
-import com.example.manageasset.domain.user.services.CreateUserService;
+import com.example.manageasset.domain.user.services.user.CreateUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

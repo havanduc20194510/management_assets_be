@@ -1,5 +1,6 @@
 package com.example.manageasset.infrastructure.user.repositories;
 
+import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.user.models.User;
 import lombok.*;
 
@@ -46,7 +47,7 @@ public class UserEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id", nullable = false)
-    private DepartmentEntity department;
+    private DepartmentEntity departmentEntity;
 
     public static UserEntity fromModel(User user){
         return new UserEntity(
@@ -65,6 +66,25 @@ public class UserEntity {
                 new Timestamp(user.getUpdatedAt().asLong()),
                 user.getIsDeleted(),
                 DepartmentEntity.fromModel(user.getDepartment())
+        );
+    }
+    public User toModel(){
+        return new User(
+                id,
+                fullName,
+                address,
+                email,
+                mobile,
+                sex,
+                dateOfBirth,
+                username,
+                password,
+                position,
+                avatar,
+                new Millisecond(createdAt.getTime()),
+                new Millisecond(updatedAt.getTime()),
+                isDeleted,
+                departmentEntity.toModel()
         );
     }
 }

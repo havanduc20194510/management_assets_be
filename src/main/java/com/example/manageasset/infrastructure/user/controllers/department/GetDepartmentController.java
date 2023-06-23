@@ -23,7 +23,7 @@ public class GetDepartmentController {
     }
 
     @GetMapping(value = "/get/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id) throws NotFoundException {
+    public ResponseEntity<?> get(@PathVariable("id") Long id) throws NotFoundException {
         PagingPayload.PagingPayloadBuilder<DepartmentDto> payloadBuilder = PagingPayload.builder();
         payloadBuilder.data(getDepartmentService.get(id));
         return new ResponseEntity<>(new ResponseBody(payloadBuilder.build(), ResponseBody.Status.SUCCESS, ResponseBody.Code.SUCCESS), HttpStatus.OK);

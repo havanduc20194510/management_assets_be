@@ -62,4 +62,35 @@ public class User {
         if(Strings.isNullOrEmpty(position)) throw new InvalidDataException("Required field User[position]");
         if(Strings.isNullOrEmpty(avatar)) throw new InvalidDataException("Required field User[avatar]");
     }
+
+    public void validate(String fullName, String address, String email, String mobile, Boolean sex, String dateOfBirth, String position){
+        if(Strings.isNullOrEmpty(fullName)) throw new InvalidDataException("Required field User[fullName]");
+        if(Strings.isNullOrEmpty(address)) throw new InvalidDataException("Required field User[address]");
+        if(Strings.isNullOrEmpty(email)) throw new InvalidDataException("Required field User[email]");
+        if(Strings.isNullOrEmpty(mobile)) throw new InvalidDataException("Required field User[mobile]");
+        if(sex == null) throw new InvalidDataException("Required field User[sex]");
+        if(Strings.isNullOrEmpty(dateOfBirth)) throw new InvalidDataException("Required field User[dateOfBirth]");
+        if(Strings.isNullOrEmpty(position)) throw new InvalidDataException("Required field User[position]");
+    }
+
+    public void update(String fullName, String address, String email, String mobile, Boolean sex, String dateOfBirth, String position, String avatar, Department department){
+        validate(fullName, address ,email, mobile, sex, dateOfBirth, position);
+
+        this.fullName = fullName;
+        this.address = address;
+        this.email = email;
+        this.mobile = mobile;
+        this.sex = sex;
+        this.dateOfBirth = dateOfBirth;
+        this.position = position;
+
+        if(!Strings.isNullOrEmpty(avatar)) this.avatar = avatar;
+        this.department = department;
+        this.updatedAt = Millisecond.now();
+    }
+
+    public void delete(){
+        this.updatedAt = Millisecond.now();
+        this.isDeleted = true;
+    }
 }
