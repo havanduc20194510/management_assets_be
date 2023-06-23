@@ -1,7 +1,7 @@
-package com.example.manageasset.infrastructure.asset.controllers;
+package com.example.manageasset.infrastructure.asset.controllers.asset;
 
 import com.example.manageasset.domain.asset.dtos.AssetDto;
-import com.example.manageasset.domain.asset.services.GetAssetService;
+import com.example.manageasset.domain.asset.services.asset.GetAssetService;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
 import com.example.manageasset.domain.shared.models.PagingPayload;
 import com.example.manageasset.domain.shared.models.ResponseBody;

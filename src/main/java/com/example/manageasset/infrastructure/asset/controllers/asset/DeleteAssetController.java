@@ -1,6 +1,6 @@
-package com.example.manageasset.infrastructure.asset.controllers;
+package com.example.manageasset.infrastructure.asset.controllers.asset;
 
-import com.example.manageasset.domain.asset.services.DeleteAssetService;
+import com.example.manageasset.domain.asset.services.asset.DeleteAssetService;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
 import com.example.manageasset.domain.shared.models.PagingPayload;
 import com.example.manageasset.domain.shared.models.ResponseBody;

@@ -1,7 +1,7 @@
-package com.example.manageasset.infrastructure.asset.controllers;
+package com.example.manageasset.infrastructure.asset.controllers.asset;
 
 import com.example.manageasset.domain.asset.dtos.AssetDto;
-import com.example.manageasset.domain.asset.services.GetAllAssetService;
+import com.example.manageasset.domain.asset.services.asset.GetAllAssetService;
 import com.example.manageasset.domain.shared.models.PagingPayload;
 import com.example.manageasset.domain.shared.models.ResponseBody;
 import lombok.RequiredArgsConstructor;

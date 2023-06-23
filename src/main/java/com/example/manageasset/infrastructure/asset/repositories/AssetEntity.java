@@ -40,9 +40,9 @@ public class AssetEntity {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
-    /*@ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity manager;*/
+    private UserEntity manager;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)
@@ -52,7 +52,7 @@ public class AssetEntity {
     @JoinColumn(name = "asset_id", nullable = false)
     private List<AttachmentEntity> attachments = new ArrayList<>();
 
-    public static AssetEntity fromDomain(Asset asset) {
+    public static AssetEntity fromModel(Asset asset) {
         return new AssetEntity(
                 asset.getId(),
                 asset.getName(),
@@ -63,15 +63,15 @@ public class AssetEntity {
                 new Timestamp(asset.getCreatedAt().asLong()),
                 new Timestamp(asset.getUpdatedAt().asLong()),
                 asset.getIsDeleted(),
-//                UserEntity.fromDomain(asset.getManager()),
-                CategoryEntity.fromDomain(asset.getCategory()),
+                UserEntity.fromModel(asset.getManager()),
+                CategoryEntity.fromModel(asset.getCategory()),
                 asset.getAttachments().stream().map(AttachmentEntity::fromDomain).collect(Collectors.toList())
         );
     }
 
-    public Asset toDomain() {
+    public Asset toModel() {
         return new Asset(id, name, quantity, status, value, managementUnit, new Millisecond(createdAt.getTime()),
-                new Millisecond(updatedAt.getTime()), isDeleted, /*manager,*/ category.toDomain(),
+                new Millisecond(updatedAt.getTime()), isDeleted, manager.toModel(), category.toModel(),
                 attachments.stream().map(AttachmentEntity::toDomain).collect(Collectors.toList()));
     }
 }

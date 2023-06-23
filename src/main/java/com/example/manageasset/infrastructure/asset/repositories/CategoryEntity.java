@@ -26,7 +26,7 @@ public class CategoryEntity {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
-    public static CategoryEntity fromDomain(Category category) {
+    public static CategoryEntity fromModel(Category category) {
         return new CategoryEntity(
                 category.getId(),
                 category.getName(),
@@ -36,7 +36,7 @@ public class CategoryEntity {
         );
     }
 
-    public Category toDomain() {
+    public Category toModel() {
         return new Category(id, name, new Millisecond(createdAt.getTime()), new Millisecond(updatedAt.getTime()), isDeleted);
     }
 }

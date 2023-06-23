@@ -10,5 +10,4 @@ public interface CategoryRepository {
     Long countTotal(String searchText);
     Category getById(Long id);
     void save(Category category);
-    void delete(Long id);
 }

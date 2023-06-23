@@ -3,11 +3,11 @@ package com.example.manageasset.domain.asset.models;
 import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.user.models.User;
+import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -24,11 +24,11 @@ public class Asset {
     private Millisecond createdAt;
     private Millisecond updatedAt;
     private Boolean isDeleted;
-//    private User manager;
+    private User manager;
     private Category category;
     private List<Attachment> attachments;
 
-    public Asset(String name, Integer quantity, String status, Double value, String managementUnit, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted, /*User manager,*/ Category category, List<Attachment> attachments) {
+    public Asset(String name, Integer quantity, String status, Double value, String managementUnit, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted, User manager, Category category, List<Attachment> attachments) {
         this.name = name;
         this.quantity = quantity;
         this.status = status;
@@ -37,15 +37,15 @@ public class Asset {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isDeleted = isDeleted;
-        /*this.manager = manager;*/
+        this.manager = manager;
         this.category = category;
         this.attachments = attachments;
     }
 
     public static Asset create(String name, Integer quantity, String status, Double value,
-                               String managementUnit, /*User manager,*/ Category category, List<Attachment> attachments) {
+                               String managementUnit, User manager, Category category, List<Attachment> attachments) {
         validate(name, quantity, status, value, managementUnit, attachments);
-        return new Asset(name, quantity, status, value, managementUnit, Millisecond.now(), Millisecond.now(), false, /*manager,*/ category, attachments);
+        return new Asset(name, quantity, status, value, managementUnit, Millisecond.now(), Millisecond.now(), false, manager, category, attachments);
     }
 
     public void update(String name, Integer quantity, String status, Double value,
@@ -62,23 +62,28 @@ public class Asset {
     }
 
     private static void validate(String name, Integer quantity, String status, Double value, String managementUnit, List<Attachment> attachments) {
-        if(!StringUtils.hasLength(name)){
+        if(Strings.isNullOrEmpty(name)){
             throw new InvalidDataException("Required field [name]");
         }
         if(quantity == null){
             throw new InvalidDataException("Required field [quantity]");
         }
-        if(!StringUtils.hasLength(status)){
+        if(Strings.isNullOrEmpty(status)){
             throw new InvalidDataException("Required field [status]");
         }
         if(value == null){
             throw new InvalidDataException("Required field [value]");
         }
-        if(!StringUtils.hasLength(managementUnit)){
+        if(Strings.isNullOrEmpty(managementUnit)){
             throw new InvalidDataException("Required field [managementUnit]");
         }
         if(CollectionUtils.isEmpty(attachments)){
             throw new InvalidDataException("Required field [attachments]");
         }
+    }
+
+    public void delete(){
+        this.updatedAt = Millisecond.now();
+        this.isDeleted = true;
     }
 }

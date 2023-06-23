@@ -1,7 +1,7 @@
-package com.example.manageasset.infrastructure.asset.controllers;
+package com.example.manageasset.infrastructure.asset.controllers.category;
 
 import com.example.manageasset.domain.asset.dtos.CategoryDto;
-import com.example.manageasset.domain.asset.services.CreateCategoryService;
+import com.example.manageasset.domain.asset.services.category.CreateCategoryService;
 import com.example.manageasset.domain.shared.models.PagingPayload;
 import com.example.manageasset.domain.shared.models.ResponseBody;
 import lombok.RequiredArgsConstructor;

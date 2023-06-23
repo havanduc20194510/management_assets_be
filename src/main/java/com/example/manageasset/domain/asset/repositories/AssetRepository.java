@@ -10,5 +10,4 @@ public interface AssetRepository {
     Long countTotal(String searchText);
     Asset getById(Long id);
     void save(Asset asset);
-    void delete(Long id);
 }

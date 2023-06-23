@@ -1,4 +1,4 @@
-package com.example.manageasset.domain.asset.services;
+package com.example.manageasset.domain.asset.services.category;
 
 import com.example.manageasset.domain.asset.dtos.CategoryDto;
 import com.example.manageasset.domain.asset.models.Category;

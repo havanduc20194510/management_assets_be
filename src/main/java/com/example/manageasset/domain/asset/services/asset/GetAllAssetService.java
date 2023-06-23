@@ -1,4 +1,4 @@
-package com.example.manageasset.domain.asset.services;
+package com.example.manageasset.domain.asset.services.asset;
 
 import com.example.manageasset.domain.asset.dtos.AssetDto;
 import com.example.manageasset.domain.asset.models.Asset;
@@ -23,7 +23,7 @@ public class GetAllAssetService {
         PagingPayload.PagingPayloadBuilder<List<AssetDto>> payloadBuilder = PagingPayload.builder();
         payloadBuilder.data(assetDtos);
         payloadBuilder.page(page);
-        payloadBuilder.size(limit);
+        payloadBuilder.limit(limit);
         payloadBuilder.total(assetRepository.countTotal(searchText));
         return payloadBuilder.build();
     }

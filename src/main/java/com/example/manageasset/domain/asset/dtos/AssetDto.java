@@ -1,6 +1,7 @@
 package com.example.manageasset.domain.asset.dtos;
 
 import com.example.manageasset.domain.asset.models.Asset;
+import com.example.manageasset.domain.user.dtos.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,14 +30,14 @@ public class AssetDto {
     private Long createdAt;
     @JsonProperty("updated_at")
     private Long updatedAt;
-//    private UserDto manager;
+    private UserDto manager;
     private CategoryDto category;
     private List<AttachmentDto> attachments;
 
     public static AssetDto fromModel(Asset asset) {
         return new AssetDto(asset.getId(), asset.getName(), asset.getQuantity(), asset.getStatus(), asset.getValue(),
                 asset.getManagementUnit(), asset.getCreatedAt().asLong(), asset.getUpdatedAt().asLong(),
-//                UserDto.fromModel(asset.getManager()),
+                UserDto.fromModel(asset.getManager()),
                 CategoryDto.fromModel(asset.getCategory()),
                 CollectionUtils.isEmpty(asset.getAttachments()) ? null : asset.getAttachments().stream().map(AttachmentDto::fromModel).collect(Collectors.toList()));
     }
