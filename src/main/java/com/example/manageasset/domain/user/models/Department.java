@@ -38,4 +38,15 @@ public class Department {
             throw new InvalidDataException("Required field Department[name]");
         }
     }
+
+    public void update(String name){
+        validate(name);
+        this.name = name;
+        this.updatedAt = Millisecond.now();
+    }
+
+    public void delete(){
+        this.updatedAt = Millisecond.now();
+        this.isDeleted = true;
+    }
 }

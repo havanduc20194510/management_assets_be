@@ -1,4 +1,4 @@
-package com.example.manageasset.infrastructure.user.controllers;
+package com.example.manageasset.infrastructure.user.controllers.user;
 
 
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
