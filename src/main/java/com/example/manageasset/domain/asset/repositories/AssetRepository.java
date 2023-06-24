@@ -10,4 +10,5 @@ public interface AssetRepository {
     Long countTotal(String searchText, Long categoryId);
     Asset getById(Long id);
     void save(Asset asset);
+    List<Asset> findByIdIn(List<Long> assetIds);
 }

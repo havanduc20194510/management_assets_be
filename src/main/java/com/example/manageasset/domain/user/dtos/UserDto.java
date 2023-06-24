@@ -32,9 +32,13 @@ public class UserDto {
     private String position;
     private String avatar;
     private DepartmentDto department;
+    @JsonProperty("created_at")
+    private Long createdAt;
+    @JsonProperty("updated_at")
+    private Long updatedAt;
 
 
-    public UserDto(Long id, String fullName, String address, String email, String mobile, Boolean sex, String dateOfBirth, String username, String position, String avatar, DepartmentDto department) {
+    public UserDto(Long id, String fullName, String address, String email, String mobile, Boolean sex, String dateOfBirth, String username, String position, String avatar, DepartmentDto department, Long createdAt, Long updatedAt ) {
         this.id = id;
         this.fullName = fullName;
         this.address = address;
@@ -46,9 +50,11 @@ public class UserDto {
         this.position = position;
         this.avatar = avatar;
         this.department = department;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public static UserDto fromModel(User user){
-        return new UserDto(user.getId(), user.getFullName(), user.getAddress(), user.getEmail(), user.getMobile(), user.getSex(), user.getDateOfBirth(), user.getUsername(), user.getPosition(), user.getAvatar(), DepartmentDto.fromModel(user.getDepartment()));
+        return new UserDto(user.getId(), user.getFullName(), user.getAddress(), user.getEmail(), user.getMobile(), user.getSex(), user.getDateOfBirth(), user.getUsername(), user.getPosition(), user.getAvatar(), DepartmentDto.fromModel(user.getDepartment()), user.getCreatedAt().asLong(), user.getUpdatedAt().asLong());
     }
 }

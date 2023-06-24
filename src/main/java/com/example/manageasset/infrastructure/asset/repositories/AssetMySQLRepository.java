@@ -41,4 +41,9 @@ public class AssetMySQLRepository implements AssetRepository {
         assetJpa.save(assetEntity);
     }
 
+    @Override
+    public List<Asset> findByIdIn(List<Long> assetIds) {
+        return assetJpa.findByIdInAndIsDeletedFalse(assetIds).stream().map(AssetEntity::toModel).collect(Collectors.toList());
+    }
+
 }

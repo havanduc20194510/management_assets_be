@@ -55,7 +55,6 @@ public class LeaseContractEntity {
                 leaseContract.getIsDeleted(),
                 UserEntity.fromModel(leaseContract.getUser()),
                 UserEntity.fromModel(leaseContract.getClient())
-
         );
     }
 

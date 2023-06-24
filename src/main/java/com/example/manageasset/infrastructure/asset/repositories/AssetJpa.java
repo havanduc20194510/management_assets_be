@@ -19,4 +19,5 @@ public interface AssetJpa extends JpaRepository<AssetEntity, Long> {
             "AND (:categoryId is null or (a.category.id = :categoryId and a.category.isDeleted = false))")
     Long countTotal(@Param("searchText") String searchText, @Param("categoryId") Long categoryId);
     AssetEntity findByIdAndIsDeletedFalse(Long id);
+    List<AssetEntity> findByIdInAndIsDeletedFalse(List<Long> ids);
 }

@@ -2,6 +2,7 @@ package com.example.manageasset.infrastructure.lease.repositories;
 
 import com.example.manageasset.domain.asset.models.Asset;
 import com.example.manageasset.domain.lease.models.AssetLeased;
+import com.example.manageasset.domain.lease.models.LeaseContract;
 import com.example.manageasset.infrastructure.asset.repositories.AssetEntity;
 import com.example.manageasset.infrastructure.user.repositories.UserEntity;
 import lombok.AllArgsConstructor;
@@ -24,15 +25,21 @@ public class AssetLeasedEntity {
     private Long id;
     @Column(name = "quantity_lease", nullable = false)
     private Integer quantityLease;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "asset_id", nullable = false)
     private AssetEntity asset;
 
-    public static AssetLeasedEntity fromModel(AssetLeased assetLeased){
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "lease_contract_id", nullable = false)
+    private LeaseContractEntity leaseContract;
+
+    public static AssetLeasedEntity fromModel(AssetLeased assetLeased, LeaseContractEntity leaseContract){
         return new AssetLeasedEntity(
                 assetLeased.getId(),
                 assetLeased.getQuantityLease(),
-                AssetEntity.fromModel(assetLeased.getAsset())
+                AssetEntity.fromModel(assetLeased.getAsset()),
+                leaseContract
         );
     }
 
