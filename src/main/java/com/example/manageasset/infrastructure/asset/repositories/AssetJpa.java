@@ -2,10 +2,13 @@ package com.example.manageasset.infrastructure.asset.repositories;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -20,4 +23,9 @@ public interface AssetJpa extends JpaRepository<AssetEntity, Long> {
     Long countTotal(@Param("searchText") String searchText, @Param("categoryId") Long categoryId);
     AssetEntity findByIdAndIsDeletedFalse(Long id);
     List<AssetEntity> findByIdInAndIsDeletedFalse(List<Long> ids);
+
+    @Modifying
+    @Transactional
+    @Query("update AssetEntity asset set asset.quantity=:quantity, asset.updatedAt=:updatedAt where asset.id=:assetId")
+    void updateQuantity(@Param("quantity") Integer quantity, @Param("updatedAt") Timestamp updatedAt, @Param("assetId") Long assetId);
 }

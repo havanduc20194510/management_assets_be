@@ -13,6 +13,8 @@ import com.example.manageasset.domain.shared.utility.ULID;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,24 +33,32 @@ public class CreateLeaseContractService {
         this.leaseContractRepository = leaseContractRepository;
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void create(LeaseContractDto leaseContractDto) throws NotFoundException {
         User user = userRepository.findById(leaseContractDto.getUserDto().getId());
-        if(user == null) throw new NotFoundException(String.format("User[id=%d] not found", leaseContractDto.getUserDto().getId()));
+        if (user == null)
+            throw new NotFoundException(String.format("User[id=%d] not found", leaseContractDto.getUserDto().getId()));
         User client = userRepository.findById(leaseContractDto.getClientDto().getId());
-        if(client == null) throw new NotFoundException(String.format("Client[id=%d] not found", leaseContractDto.getClientDto().getId()));
+        if (client == null)
+            throw new NotFoundException(String.format("Client[id=%d] not found", leaseContractDto.getClientDto().getId()));
 
-        LeaseContract  leaseContract = LeaseContract.create(new ULID().nextULID(), client, user, leaseContractDto.getReason(), new Millisecond(leaseContractDto.getRevokedAt()), new Millisecond(leaseContractDto.getLeasedAt()), leaseContractDto.getNote());
+        LeaseContract leaseContract = LeaseContract.create(new ULID().nextULID(), client, user, leaseContractDto.getReason(), new Millisecond(leaseContractDto.getRevokedAt()), new Millisecond(leaseContractDto.getLeasedAt()), leaseContractDto.getNote());
 
         List<AssetLeased> assetLeaseds = new ArrayList<>();
-        for (AssetLeasedDto assetLeasedDto : leaseContractDto.getAssetLeasedDtos()){
+        for (AssetLeasedDto assetLeasedDto : leaseContractDto.getAssetLeasedDtos()) {
             Asset asset = assetRepository.getById(assetLeasedDto.getAssetDto().getId());
-            if(asset == null) throw new NotFoundException(String.format("Asset[id=%d] not found", assetLeasedDto.getAssetDto().getId()));
+            if (asset == null)
+                throw new NotFoundException(String.format("Asset[id=%d] not found", assetLeasedDto.getAssetDto().getId()));
+            int quantity = asset.getQuantity();
+            if (quantity < assetLeasedDto.getQuantityLease()) {
+                throw new NotFoundException(String.format("Asset[id=%d] have inventory quantity less leased quantity", assetLeasedDto.getAssetDto().getId()));
+            }
             assetLeaseds.add(AssetLeased.create(assetLeasedDto.getQuantityLease(), asset));
+            assetRepository.updateQuantity(quantity - assetLeasedDto.getQuantityLease(), asset.getId());
         }
         leaseContract.setAssetLeaseds(assetLeaseds);
 
         leaseContractRepository.save(leaseContract);
 
-        //TODO update quantity asset
     }
 }

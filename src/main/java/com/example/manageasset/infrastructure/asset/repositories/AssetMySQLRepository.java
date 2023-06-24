@@ -2,6 +2,7 @@ package com.example.manageasset.infrastructure.asset.repositories;
 
 import com.example.manageasset.domain.asset.models.Asset;
 import com.example.manageasset.domain.asset.repositories.AssetRepository;
+import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.shared.models.QueryFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +46,11 @@ public class AssetMySQLRepository implements AssetRepository {
     @Override
     public List<Asset> findByIdIn(List<Long> assetIds) {
         return assetJpa.findByIdInAndIsDeletedFalse(assetIds).stream().map(AssetEntity::toModel).collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateQuantity(Integer quantity, Long assetId) {
+        assetJpa.updateQuantity(quantity, new Timestamp(Millisecond.now().asLong()), assetId);
     }
 
 }
