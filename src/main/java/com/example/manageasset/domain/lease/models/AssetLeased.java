@@ -27,4 +27,10 @@ public class AssetLeased {
     public static void validate(Integer quantityLease){
         if(quantityLease == null || quantityLease <= 0) throw new InvalidDataException("Required field AssetLeased[quantityLease]");
     }
+
+    public static AssetLeased create(Long id, Integer quantityLease, Asset asset){
+        validate(quantityLease);
+        return new AssetLeased(id, quantityLease, asset);
+    }
+
 }

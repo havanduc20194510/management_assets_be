@@ -48,4 +48,19 @@ public class LeaseContract {
         if(Strings.isNullOrEmpty(id)) throw new InvalidDataException("Required field LeaseContract[id]");
         if(Strings.isNullOrEmpty(reason)) throw new InvalidDataException("Required field LeaseContract[reason]");
     }
+
+    private void validate(String reason){
+        if(Strings.isNullOrEmpty(reason)) throw new InvalidDataException("Required field LeaseContract[reason]");
+    }
+
+    public void update(User client, User user, String reason, Millisecond revokedAt, Millisecond leasedAt, String note){
+        validate(reason);
+
+        this.client = client;
+        this.user = user;
+        this.reason = reason;
+        this.revokedAt = revokedAt;
+        this.leasedAt = leasedAt;
+        this.note = note;
+    }
 }
