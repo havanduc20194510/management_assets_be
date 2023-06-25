@@ -27,19 +27,23 @@ public class UpdateLeaseContractService {
     private final UserRepository userRepository;
     private final LeaseContractRepository leaseContractRepository;
     private final AssetLeasedRepository assetLeasedRepository;
+    private final CheckProcessLeaseContractService checkProcessLeaseContractService;
 
 
-    public UpdateLeaseContractService(AssetRepository assetRepository, UserRepository userRepository, LeaseContractRepository leaseContractRepository, AssetLeasedRepository assetLeasedRepository) {
+    public UpdateLeaseContractService(AssetRepository assetRepository, UserRepository userRepository, LeaseContractRepository leaseContractRepository, AssetLeasedRepository assetLeasedRepository, CheckProcessLeaseContractService checkProcessLeaseContractService) {
         this.assetRepository = assetRepository;
         this.userRepository = userRepository;
         this.leaseContractRepository = leaseContractRepository;
         this.assetLeasedRepository = assetLeasedRepository;
+        this.checkProcessLeaseContractService = checkProcessLeaseContractService;
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void update(LeaseContractDto leaseContractDto) throws NotFoundException {
         LeaseContract leaseContract = leaseContractRepository.findById(leaseContractDto.getId());
         if (leaseContract == null) throw new NotFoundException(String.format("LeaseContract[id=%s] not found", leaseContractDto.getId()));
+
+        checkProcessLeaseContractService.check(leaseContract);
 
         User user = userRepository.findById(leaseContractDto.getUserDto().getId());
         if (user == null)
