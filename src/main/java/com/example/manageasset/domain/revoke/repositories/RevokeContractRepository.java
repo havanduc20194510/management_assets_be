@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface RevokeContractRepository {
     void save(RevokeContract revokeContract);
-    List<RevokeContract> getAll(QueryFilter queryFilter);
-    Long countTotal();
+    List<RevokeContract> getAll(QueryFilter queryFilter, Long from, Long to, String searchText);
+    Long countTotal(Long from, Long to, String searchText);
     RevokeContract getById(String id);
 
     Boolean existedRevokeForLease(String leaseId);

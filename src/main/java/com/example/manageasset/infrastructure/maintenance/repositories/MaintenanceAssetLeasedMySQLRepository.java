@@ -6,6 +6,9 @@ import com.example.manageasset.domain.maintenance.repositories.MaintenanceAssetL
 import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.shared.models.QueryFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,12 +38,30 @@ public class MaintenanceAssetLeasedMySQLRepository implements MaintenanceAssetLe
 
     @Override
     public List<MaintenanceAssetLeased> getAll(QueryFilter queryFilter, Long from, Long to, String searchText) {
-        return null;
+        Pageable pageable = PageRequest.of(queryFilter.getPage(), queryFilter.getLimit(),
+                queryFilter.getSort().equals("asc") ? Sort.by("startedAt").ascending() : Sort.by("startedAt").descending());
+        Timestamp fromDate = null;
+        if(from != null){
+            fromDate = new Timestamp(from);
+        }
+        Timestamp toDate = null;
+        if(to != null){
+            toDate = new Timestamp(to);
+        }
+        return maintenanceAssetLeasedJpa.findAll(pageable, fromDate, toDate, searchText).stream().map(MaintenanceAssetLeasedEntity::toModel).collect(Collectors.toList());
     }
 
     @Override
     public Long countTotal(Long from, Long to, String searchText) {
-        return null;
+        Timestamp fromDate = null;
+        if(from != null){
+            fromDate = new Timestamp(from);
+        }
+        Timestamp toDate = null;
+        if(to != null){
+            toDate = new Timestamp(to);
+        }
+        return maintenanceAssetLeasedJpa.countTotal(fromDate, toDate, searchText);
     }
 
     @Override

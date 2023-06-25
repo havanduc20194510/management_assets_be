@@ -4,9 +4,14 @@ import com.example.manageasset.domain.revoke.models.RevokeContract;
 import com.example.manageasset.domain.revoke.repositories.RevokeContractRepository;
 import com.example.manageasset.domain.shared.models.QueryFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,13 +24,31 @@ public class RevokeContractMySQLRepository implements RevokeContractRepository {
     }
 
     @Override
-    public List<RevokeContract> getAll(QueryFilter queryFilter) {
-        return null;
+    public List<RevokeContract> getAll(QueryFilter queryFilter, Long from, Long to, String searchText) {
+        Pageable pageable = PageRequest.of(queryFilter.getPage(), queryFilter.getLimit(),
+                queryFilter.getSort().equals("asc") ? Sort.by("revokedAt").ascending() : Sort.by("revokedAt").descending());
+        Timestamp fromDate = null;
+        if(from != null){
+            fromDate = new Timestamp(from);
+        }
+        Timestamp toDate = null;
+        if(to != null){
+            toDate = new Timestamp(to);
+        }
+        return revokeContractJpa.findAll(pageable, fromDate, toDate, searchText).stream().map(RevokeContractEntity::toModel).collect(Collectors.toList());
     }
 
     @Override
-    public Long countTotal() {
-        return null;
+    public Long countTotal(Long from, Long to, String searchText) {
+        Timestamp fromDate = null;
+        if(from != null){
+            fromDate = new Timestamp(from);
+        }
+        Timestamp toDate = null;
+        if(to != null){
+            toDate = new Timestamp(to);
+        }
+        return revokeContractJpa.countTotal(fromDate, toDate, searchText);
     }
 
     @Override
