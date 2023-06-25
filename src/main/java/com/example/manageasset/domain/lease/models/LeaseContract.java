@@ -2,6 +2,7 @@ package com.example.manageasset.domain.lease.models;
 
 import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.models.Millisecond;
+import com.example.manageasset.domain.shared.models.Status;
 import com.example.manageasset.domain.user.models.User;
 import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class LeaseContract {
     private Millisecond createdAt;
     private Millisecond updatedAt;
     private Boolean isDeleted;
+    private Status status;
 
     public LeaseContract(String id, User client, User user, String reason, Millisecond revokedAt, Millisecond leasedAt, String note, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted) {
         this.id = id;
@@ -34,6 +36,20 @@ public class LeaseContract {
         this.revokedAt = revokedAt;
         this.leasedAt = leasedAt;
         this.note = note;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.isDeleted = isDeleted;
+    }
+
+    public LeaseContract(String id, User client, User user, String reason, Millisecond revokedAt, Millisecond leasedAt, String note, List<AssetLeased> assetLeaseds, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted) {
+        this.id = id;
+        this.client = client;
+        this.user = user;
+        this.reason = reason;
+        this.revokedAt = revokedAt;
+        this.leasedAt = leasedAt;
+        this.note = note;
+        this.assetLeaseds = assetLeaseds;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isDeleted = isDeleted;

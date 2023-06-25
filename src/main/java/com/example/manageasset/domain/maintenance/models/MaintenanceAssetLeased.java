@@ -3,6 +3,7 @@ package com.example.manageasset.domain.maintenance.models;
 import com.example.manageasset.domain.lease.models.AssetLeased;
 import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.models.Millisecond;
+import com.example.manageasset.domain.shared.models.Status;
 import com.example.manageasset.domain.user.models.User;
 import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class MaintenanceAssetLeased {
     private Millisecond createdAt;
     private Millisecond updatedAt;
     private Boolean isDeleted;
+    private Status status;
 
     public MaintenanceAssetLeased(String id, User client, User user, String reason, Millisecond completedAt, Millisecond startedAt, String note, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted) {
         this.id = id;

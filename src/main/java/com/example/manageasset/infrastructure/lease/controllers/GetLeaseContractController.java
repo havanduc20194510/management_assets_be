@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/lease-contract")
 public class GetLeaseContractController {
     private final GetLeaseContractService getLeaseContractService;
