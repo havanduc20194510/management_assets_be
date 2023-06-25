@@ -1,5 +1,6 @@
 package com.example.manageasset.domain.lease.dtos;
 
+import com.example.manageasset.domain.lease.models.LeaseContract;
 import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.user.dtos.UserDto;
@@ -14,6 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -39,5 +41,20 @@ public class LeaseContractDto {
     private Long createdAt;
     @JsonProperty("updated_at")
     private Long updatedAt;
+
+    public static LeaseContractDto fromModel(LeaseContract leaseContract){
+        return new LeaseContractDto(
+                leaseContract.getId(),
+                UserDto.fromModel(leaseContract.getClient()),
+                UserDto.fromModel(leaseContract.getUser()),
+                leaseContract.getReason(),
+                leaseContract.getRevokedAt().asLong(),
+                leaseContract.getLeasedAt().asLong(),
+                leaseContract.getNote(),
+                leaseContract.getAssetLeaseds().stream().map(AssetLeasedDto::fromModel).collect(Collectors.toList()),
+                leaseContract.getCreatedAt().asLong(),
+                leaseContract.getUpdatedAt().asLong()
+        );
+    }
 
 }

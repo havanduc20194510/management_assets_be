@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "lease_contracts")
@@ -43,6 +44,22 @@ public class LeaseContractEntity {
     @JoinColumn(name = "client_id", nullable = false)
     private UserEntity client;
 
+    @OneToMany(mappedBy = "leaseContract", fetch = FetchType.LAZY)
+    private List<AssetLeasedEntity> assetLeaseds;
+
+    public LeaseContractEntity(String id, String reason, Timestamp revokedAt, Timestamp leasedAt, String note, Timestamp createdAt, Timestamp updatedAt, Boolean isDeleted, UserEntity user, UserEntity client) {
+        this.id = id;
+        this.reason = reason;
+        this.revokedAt = revokedAt;
+        this.leasedAt = leasedAt;
+        this.note = note;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.isDeleted = isDeleted;
+        this.user = user;
+        this.client = client;
+    }
+
     public static LeaseContractEntity fromModel(LeaseContract leaseContract){
         return new LeaseContractEntity(
                 leaseContract.getId(),
@@ -67,6 +84,22 @@ public class LeaseContractEntity {
                 new Millisecond(revokedAt.getTime()),
                 new Millisecond(leasedAt.getTime()),
                 note,
+                new Millisecond(createdAt.getTime()),
+                new Millisecond(updatedAt.getTime()),
+                isDeleted
+        );
+    }
+
+    public LeaseContract toModelWithAssetLeased(){
+        return new LeaseContract(
+                id,
+                client.toModel(),
+                user.toModel(),
+                reason,
+                new Millisecond(revokedAt.getTime()),
+                new Millisecond(leasedAt.getTime()),
+                note,
+                assetLeaseds.stream().map(AssetLeasedEntity::toModel).collect(Collectors.toList()),
                 new Millisecond(createdAt.getTime()),
                 new Millisecond(updatedAt.getTime()),
                 isDeleted
