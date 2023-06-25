@@ -9,6 +9,7 @@ import com.example.manageasset.domain.maintenance.repositories.MaintenanceAssetL
 import com.example.manageasset.domain.shared.exceptions.InvalidRequestException;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
 import com.example.manageasset.domain.shared.models.Millisecond;
+import com.example.manageasset.domain.shared.models.Status;
 import com.example.manageasset.domain.shared.utility.ULID;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.UserRepository;

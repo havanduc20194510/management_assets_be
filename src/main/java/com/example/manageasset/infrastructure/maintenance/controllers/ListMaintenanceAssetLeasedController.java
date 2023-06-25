@@ -24,11 +24,12 @@ public class ListMaintenanceAssetLeasedController {
                                   @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
                                   @RequestParam(value = "from", required = false) Long from,
                                   @RequestParam(value = "to", required = false) Long to,
-                                  @RequestParam(value = "key", required = false) String searchText) {
+                                  @RequestParam(value = "key", required = false) String searchText,
+                                  @RequestParam(value = "status", required = false) Integer status) {
         if(to != null){
             to += 86399000;
         }
-        PagingPayload<List<MaintenanceAssetLeasedDto>> result = listMaintenanceAssetLeasedService.getAll(limit, page, sort, from, to, searchText);
+        PagingPayload<List<MaintenanceAssetLeasedDto>> result = listMaintenanceAssetLeasedService.getAll(limit, page, sort, from, to, searchText, status);
         return new ResponseEntity<>(new ResponseBody(result, ResponseBody.Status.SUCCESS, ResponseBody.Code.SUCCESS), HttpStatus.OK);
     }
 }
