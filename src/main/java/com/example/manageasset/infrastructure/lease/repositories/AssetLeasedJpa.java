@@ -15,4 +15,6 @@ public interface AssetLeasedJpa extends JpaRepository<AssetLeasedEntity, Long> {
     @Transactional
     @Query("delete from AssetLeasedEntity a where a.leaseContract.id = :id")
     void deleteAllByLeaseContractId(@Param("id") String id);
+    @Query("SELECT a FROM AssetLeasedEntity a, MaintenanceAssetEntity m WHERE m.maintenanceAssetLeased.id = :maintenanceId AND a.id = m.assetLeased.id")
+    List<AssetLeasedEntity> findByMaintenanceId(@Param("maintenanceId") String maintenanceId);
 }

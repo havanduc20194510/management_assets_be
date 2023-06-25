@@ -3,12 +3,15 @@ package com.example.manageasset.infrastructure.maintenance.repositories;
 import com.example.manageasset.domain.maintenance.models.MaintenanceAsset;
 import com.example.manageasset.domain.maintenance.models.MaintenanceAssetLeased;
 import com.example.manageasset.domain.maintenance.repositories.MaintenanceAssetLeasedRepository;
+import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.shared.models.QueryFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -31,17 +34,23 @@ public class MaintenanceAssetLeasedMySQLRepository implements MaintenanceAssetLe
     }
 
     @Override
-    public List<MaintenanceAssetLeased> getAll(QueryFilter queryFilter) {
+    public List<MaintenanceAssetLeased> getAll(QueryFilter queryFilter, Long from, Long to, String searchText) {
         return null;
     }
 
     @Override
-    public Long countTotal() {
+    public Long countTotal(Long from, Long to, String searchText) {
         return null;
     }
 
     @Override
-    public MaintenanceAssetLeased getById(Long id) {
-        return null;
+    public MaintenanceAssetLeased getById(String id) {
+        Optional<MaintenanceAssetLeasedEntity> opt = maintenanceAssetLeasedJpa.findById(id);
+        return opt.map(MaintenanceAssetLeasedEntity::toModel).orElse(null);
+    }
+
+    @Override
+    public void delete(String id) {
+        maintenanceAssetLeasedJpa.deleteById(id, new Timestamp(Millisecond.now().asLong()));
     }
 }

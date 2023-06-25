@@ -45,8 +45,24 @@ public class MaintenanceAssetLeased {
         return new MaintenanceAssetLeased(id, client, user, reason, completedAt, startedAt, note, Millisecond.now(), Millisecond.now(), false);
     }
 
+    public void update(User client, User user, String reason, Millisecond completedAt, Millisecond startedAt, String note){
+        validate(reason);
+
+        this.client = client;
+        this.user = user;
+        this.reason = reason;
+        this.completedAt = completedAt;
+        this.startedAt = startedAt;
+        this.note = note;
+        this.updatedAt = Millisecond.now();
+    }
+
     private static void validate(String id, String reason){
         if(Strings.isNullOrEmpty(id)) throw new InvalidDataException("Required field MaintenanceAssetLeased[id]");
+        if(Strings.isNullOrEmpty(reason)) throw new InvalidDataException("Required field MaintenanceAssetLeased[reason]");
+    }
+
+    private static void validate(String reason){
         if(Strings.isNullOrEmpty(reason)) throw new InvalidDataException("Required field MaintenanceAssetLeased[reason]");
     }
 }
