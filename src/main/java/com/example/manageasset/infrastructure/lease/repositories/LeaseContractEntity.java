@@ -3,6 +3,7 @@ package com.example.manageasset.infrastructure.lease.repositories;
 import com.example.manageasset.domain.lease.models.AssetLeased;
 import com.example.manageasset.domain.lease.models.LeaseContract;
 import com.example.manageasset.domain.shared.models.Millisecond;
+import com.example.manageasset.domain.shared.models.Status;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.infrastructure.user.repositories.UserEntity;
 import lombok.*;
@@ -38,16 +39,19 @@ public class LeaseContractEntity {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private UserEntity user;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id", nullable = false)
     private UserEntity client;
+    @Column(name = "status")
+    private Integer status;
 
     @OneToMany(mappedBy = "leaseContract", fetch = FetchType.LAZY)
     private List<AssetLeasedEntity> assetLeaseds;
 
-    public LeaseContractEntity(String id, String reason, Timestamp revokedAt, Timestamp leasedAt, String note, Timestamp createdAt, Timestamp updatedAt, Boolean isDeleted, UserEntity user, UserEntity client) {
+
+    public LeaseContractEntity(String id, String reason, Timestamp revokedAt, Timestamp leasedAt, String note, Timestamp createdAt, Timestamp updatedAt, Boolean isDeleted, UserEntity user, UserEntity client, Integer status) {
         this.id = id;
         this.reason = reason;
         this.revokedAt = revokedAt;
@@ -58,6 +62,7 @@ public class LeaseContractEntity {
         this.isDeleted = isDeleted;
         this.user = user;
         this.client = client;
+        this.status = status;
     }
 
     public static LeaseContractEntity fromModel(LeaseContract leaseContract){
@@ -71,7 +76,8 @@ public class LeaseContractEntity {
                 new Timestamp(leaseContract.getUpdatedAt().asLong()),
                 leaseContract.getIsDeleted(),
                 UserEntity.fromModel(leaseContract.getUser()),
-                UserEntity.fromModel(leaseContract.getClient())
+                UserEntity.fromModel(leaseContract.getClient()),
+                leaseContract.getStatus().asInt()
         );
     }
 
@@ -79,14 +85,15 @@ public class LeaseContractEntity {
         return new LeaseContract(
                 id,
                 client.toModel(),
-                user.toModel(),
+                user == null ? null : user.toModel(),
                 reason,
                 new Millisecond(revokedAt.getTime()),
                 new Millisecond(leasedAt.getTime()),
                 note,
                 new Millisecond(createdAt.getTime()),
                 new Millisecond(updatedAt.getTime()),
-                isDeleted
+                isDeleted,
+                new Status(status)
         );
     }
 
@@ -94,7 +101,7 @@ public class LeaseContractEntity {
         return new LeaseContract(
                 id,
                 client.toModel(),
-                user.toModel(),
+                user == null ? null : user.toModel(),
                 reason,
                 new Millisecond(revokedAt.getTime()),
                 new Millisecond(leasedAt.getTime()),
@@ -102,7 +109,8 @@ public class LeaseContractEntity {
                 assetLeaseds.stream().map(AssetLeasedEntity::toModel).collect(Collectors.toList()),
                 new Millisecond(createdAt.getTime()),
                 new Millisecond(updatedAt.getTime()),
-                isDeleted
+                isDeleted,
+                new Status(status)
         );
     }
 }

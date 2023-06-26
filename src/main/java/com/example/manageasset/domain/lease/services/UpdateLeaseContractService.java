@@ -11,6 +11,7 @@ import com.example.manageasset.domain.lease.repositories.LeaseContractRepository
 import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
 import com.example.manageasset.domain.shared.models.Millisecond;
+import com.example.manageasset.domain.shared.models.Status;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -45,14 +46,10 @@ public class UpdateLeaseContractService {
 
         checkProcessLeaseContractService.check(leaseContract);
 
-        User user = userRepository.findById(leaseContractDto.getUserDto().getId());
-        if (user == null)
-            throw new NotFoundException(String.format("User[id=%d] not found", leaseContractDto.getUserDto().getId()));
-        User client = userRepository.findById(leaseContractDto.getClientDto().getId());
-        if (client == null)
-            throw new NotFoundException(String.format("Client[id=%d] not found", leaseContractDto.getClientDto().getId()));
+        String username = "cuongpm";
+        if(!leaseContract.getClient().getUsername().equals(username)) throw new  InvalidDataException("Client is updating lease contract is not client create lease contract");
 
-        leaseContract.update(client, user, leaseContractDto.getReason(), new Millisecond(leaseContractDto.getRevokedAt()), new Millisecond(leaseContractDto.getLeasedAt()), leaseContractDto.getNote());
+        leaseContract.update(leaseContractDto.getReason(), new Millisecond(leaseContractDto.getRevokedAt()), new Millisecond(leaseContractDto.getLeasedAt()), leaseContractDto.getNote());
 
         List<AssetLeased> assetLeaseds = new ArrayList<>();
         for (AssetLeasedDto assetLeasedDto : leaseContractDto.getAssetLeasedDtos()) {
@@ -81,5 +78,17 @@ public class UpdateLeaseContractService {
 
     private AssetLeased findById(Long assetId, List<AssetLeased> assetLeaseds){
         return assetLeaseds.stream().filter(assetLeased -> Objects.equals(assetLeased.getAsset().getId(), assetId)).findAny().orElse(null);
+    }
+
+    public void updateStatus(String id, Integer status) throws NotFoundException {
+        String username = "cuongpm";
+        User user = userRepository.findByUsername(username);
+
+        LeaseContract leaseContract = leaseContractRepository.findById(id);
+        if (leaseContract == null) throw new NotFoundException(String.format("LeaseContract[id=%s] not found", id));
+
+        leaseContract.update(new Status(status), user);
+
+        leaseContractRepository.save(leaseContract);
     }
 }

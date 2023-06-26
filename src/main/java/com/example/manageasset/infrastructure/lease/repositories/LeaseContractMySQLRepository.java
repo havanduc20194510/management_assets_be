@@ -4,6 +4,9 @@ import com.example.manageasset.domain.lease.models.LeaseContract;
 import com.example.manageasset.domain.lease.repositories.LeaseContractRepository;
 import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.shared.models.QueryFilter;
+import com.example.manageasset.domain.shared.models.Status;
+import com.example.manageasset.domain.user.models.User;
+import com.example.manageasset.infrastructure.user.repositories.UserEntity;
 import com.google.common.base.Strings;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +55,7 @@ public class LeaseContractMySQLRepository implements LeaseContractRepository {
     }
 
     @Override
-    public List<LeaseContract> list(QueryFilter queryFilter, String searchText, Long leasedAtFrom, Long leasedAtTo) {
+    public List<LeaseContract> list(QueryFilter queryFilter, String searchText, Long leasedAtFrom, Long leasedAtTo, Status status) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<LeaseContractEntity> criteriaQuery = criteriaBuilder.createQuery(LeaseContractEntity.class);
         Root<LeaseContractEntity> root = criteriaQuery.from(LeaseContractEntity.class);
@@ -89,6 +92,12 @@ public class LeaseContractMySQLRepository implements LeaseContractRepository {
             );
         }
 
+        if(status != null){
+            listPredicateAnd.add(
+                    criteriaBuilder.equal(root.get("status"), status.asInt())
+            );
+        }
+
         Predicate predicateAnd
                 = criteriaBuilder.and(listPredicateAnd.toArray(new Predicate[0]));
 
@@ -106,7 +115,7 @@ public class LeaseContractMySQLRepository implements LeaseContractRepository {
     }
 
     @Override
-    public long totalList(String searchText, Long leasedAtFrom, Long leasedAtTo) {
+    public long totalList(String searchText, Long leasedAtFrom, Long leasedAtTo, Status status) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         Root<LeaseContractEntity> root = criteriaQuery.from(LeaseContractEntity.class);
@@ -140,6 +149,12 @@ public class LeaseContractMySQLRepository implements LeaseContractRepository {
         if (leasedAtTo != null && leasedAtTo >= 0) {
             listPredicateAnd.add(
                     criteriaBuilder.lessThanOrEqualTo(root.get("leasedAt"), new Timestamp(leasedAtTo))
+            );
+        }
+
+        if(status != null){
+            listPredicateAnd.add(
+                    criteriaBuilder.equal(root.get("status"), status.asInt())
             );
         }
 

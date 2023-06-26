@@ -28,7 +28,7 @@ public class LeaseContract {
     private Boolean isDeleted;
     private Status status;
 
-    public LeaseContract(String id, User client, User user, String reason, Millisecond revokedAt, Millisecond leasedAt, String note, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted) {
+    public LeaseContract(String id, User client, User user, String reason, Millisecond revokedAt, Millisecond leasedAt, String note, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted, Status status) {
         this.id = id;
         this.client = client;
         this.user = user;
@@ -39,25 +39,25 @@ public class LeaseContract {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isDeleted = isDeleted;
+        this.status = status;
     }
 
-    public LeaseContract(String id, User client, User user, String reason, Millisecond revokedAt, Millisecond leasedAt, String note, List<AssetLeased> assetLeaseds, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted) {
+    public LeaseContract(String id, User client, String reason, Millisecond revokedAt, Millisecond leasedAt, String note, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted, Status status) {
         this.id = id;
         this.client = client;
-        this.user = user;
         this.reason = reason;
         this.revokedAt = revokedAt;
         this.leasedAt = leasedAt;
         this.note = note;
-        this.assetLeaseds = assetLeaseds;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isDeleted = isDeleted;
+        this.status = status;
     }
 
-    public static LeaseContract create(String id, User client, User user, String reason, Millisecond revokedAt, Millisecond leasedAt, String note){
+    public static LeaseContract create(String id, User client, String reason, Millisecond revokedAt, Millisecond leasedAt, String note){
         validate(id, reason);
-        return new LeaseContract(id, client, user, reason, revokedAt, leasedAt, note, Millisecond.now(), Millisecond.now(), false);
+        return new LeaseContract(id, client, reason, revokedAt, leasedAt, note, Millisecond.now(), Millisecond.now(), false, Status.INPROGRESS);
     }
 
     private static void validate(String id, String reason){
@@ -69,14 +69,19 @@ public class LeaseContract {
         if(Strings.isNullOrEmpty(reason)) throw new InvalidDataException("Required field LeaseContract[reason]");
     }
 
-    public void update(User client, User user, String reason, Millisecond revokedAt, Millisecond leasedAt, String note){
+    public void update(String reason, Millisecond revokedAt, Millisecond leasedAt, String note){
         validate(reason);
 
-        this.client = client;
-        this.user = user;
         this.reason = reason;
         this.revokedAt = revokedAt;
         this.leasedAt = leasedAt;
         this.note = note;
+        this.updatedAt = Millisecond.now();
+    }
+
+    public void update(Status status, User user){
+        this.status = status;
+        this.user = user;
+        this.updatedAt = Millisecond.now();
     }
 }
