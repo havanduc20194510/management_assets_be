@@ -20,8 +20,9 @@ public class ListRevokeContractService {
     private final LeaseContractRepository leaseContractRepository;
 
     public PagingPayload<List<RevokeContractDto>> getAll(Integer limit, Integer page, String sort, Long from, Long to, String searchText) {
+        String username = null;
         QueryFilter filter = QueryFilter.create(limit, page, sort);
-        List<RevokeContract> revokeContracts = revokeContractRepository.getAll(filter, from, to, searchText);
+        List<RevokeContract> revokeContracts = revokeContractRepository.getAll(filter, from, to, searchText, username);
         revokeContracts.forEach(revokeContract -> {
             LeaseContract leaseContract = leaseContractRepository.findById(revokeContract.getLeaseContract().getId());
             revokeContract.setLeaseContract(leaseContract);
@@ -31,7 +32,7 @@ public class ListRevokeContractService {
         payloadBuilder.data(revokeContractDtos);
         payloadBuilder.page(page);
         payloadBuilder.limit(limit);
-        payloadBuilder.total(revokeContractRepository.countTotal(from, to, searchText));
+        payloadBuilder.total(revokeContractRepository.countTotal(from, to, searchText, username));
         return payloadBuilder.build();
     }
 }

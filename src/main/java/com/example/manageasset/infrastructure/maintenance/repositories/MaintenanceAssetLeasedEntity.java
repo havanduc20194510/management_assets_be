@@ -39,7 +39,7 @@ public class MaintenanceAssetLeasedEntity {
     @Column(name = "status", nullable = false)
     private Integer status;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private UserEntity user;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id", nullable = false)
@@ -56,7 +56,7 @@ public class MaintenanceAssetLeasedEntity {
                 new Timestamp(maintenanceAssetLeased.getUpdatedAt().asLong()),
                 maintenanceAssetLeased.getIsDeleted(),
                 maintenanceAssetLeased.getStatus().asInt(),
-                UserEntity.fromModel(maintenanceAssetLeased.getUser()),
+                maintenanceAssetLeased.getUser() == null ? null : UserEntity.fromModel(maintenanceAssetLeased.getUser()),
                 UserEntity.fromModel(maintenanceAssetLeased.getClient())
         );
     }
@@ -65,7 +65,7 @@ public class MaintenanceAssetLeasedEntity {
         return new MaintenanceAssetLeased(
                 id,
                 client.toModel(),
-                user.toModel(),
+                user == null ? null : user.toModel(),
                 reason,
                 new Millisecond(completedAt.getTime()),
                 new Millisecond(startedAt.getTime()),

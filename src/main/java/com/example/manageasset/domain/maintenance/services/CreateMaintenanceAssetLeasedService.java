@@ -9,7 +9,6 @@ import com.example.manageasset.domain.maintenance.repositories.MaintenanceAssetL
 import com.example.manageasset.domain.shared.exceptions.InvalidRequestException;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
 import com.example.manageasset.domain.shared.models.Millisecond;
-import com.example.manageasset.domain.shared.models.Status;
 import com.example.manageasset.domain.shared.utility.ULID;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.UserRepository;
@@ -31,16 +30,21 @@ public class CreateMaintenanceAssetLeasedService {
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void create(MaintenanceAssetLeasedDto maintenanceAssetLeasedDto) throws NotFoundException {
-        User user = userRepository.findById(maintenanceAssetLeasedDto.getUserDto().getId());
-        if (user == null)
-            throw new NotFoundException(String.format("User[id=%d] not found", maintenanceAssetLeasedDto.getUserDto().getId()));
-        User client = userRepository.findById(maintenanceAssetLeasedDto.getClientDto().getId());
-        if (client == null)
+        String username = "cuongpm";
+        User client = userRepository.findByUsername(username);
+        if(client == null)
             throw new NotFoundException(String.format("Client[id=%d] not found", maintenanceAssetLeasedDto.getClientDto().getId()));
         if(CollectionUtils.isEmpty(maintenanceAssetLeasedDto.getAssetLeasedDtos())){
             throw new InvalidRequestException("List asset leased cannot empty");
         }
-        MaintenanceAssetLeased maintenanceAssetLeased = MaintenanceAssetLeased.create(new ULID().nextULID(), client, user, maintenanceAssetLeasedDto.getReason(), new Millisecond(maintenanceAssetLeasedDto.getCompletedAt()), new Millisecond(maintenanceAssetLeasedDto.getStartedAt()), maintenanceAssetLeasedDto.getNote());
+        List<Long> assetLeasedIds = new ArrayList<>();
+        maintenanceAssetLeasedDto.getAssetLeasedDtos().forEach(assetLeasedDto -> assetLeasedIds.add(assetLeasedDto.getId()));
+        if(!assetLeasedRepository.checkLeaseContractEligibilityToMaintenance(assetLeasedIds)){
+            throw new InvalidRequestException("LeaseContract not approved yet");
+        }
+        if(assetLeasedRepository.checkLeaseContractExistedRevoke(assetLeasedIds))
+            throw new InvalidRequestException("LeaseContract have a revoke, cannot create maintenance");
+        MaintenanceAssetLeased maintenanceAssetLeased = MaintenanceAssetLeased.create(new ULID().nextULID(), client, maintenanceAssetLeasedDto.getReason(), new Millisecond(maintenanceAssetLeasedDto.getCompletedAt()), new Millisecond(maintenanceAssetLeasedDto.getStartedAt()), maintenanceAssetLeasedDto.getNote());
 
         List<AssetLeased> assetLeaseds = new ArrayList<>();
         for (AssetLeasedDto assetLeasedDto : maintenanceAssetLeasedDto.getAssetLeasedDtos()) {

@@ -20,8 +20,9 @@ public class ListMaintenanceAssetLeasedService {
     private final AssetLeasedRepository assetLeasedRepository;
 
     public PagingPayload<List<MaintenanceAssetLeasedDto>> getAll(Integer limit, Integer page, String sort, Long from, Long to, String searchText, Integer status) {
+        String username = null;
         QueryFilter filter = QueryFilter.create(limit, page, sort);
-        List<MaintenanceAssetLeased> maintenanceAssetLeaseds = maintenanceAssetLeasedRepository.getAll(filter, from, to, searchText, status);
+        List<MaintenanceAssetLeased> maintenanceAssetLeaseds = maintenanceAssetLeasedRepository.getAll(filter, from, to, searchText, status, username);
         maintenanceAssetLeaseds.forEach(maintenanceAssetLeased -> {
             List<AssetLeased> assetLeaseds = assetLeasedRepository.findByMaintenanceId(maintenanceAssetLeased.getId());
             maintenanceAssetLeased.setAssetLeaseds(assetLeaseds);
@@ -31,7 +32,7 @@ public class ListMaintenanceAssetLeasedService {
         payloadBuilder.data(maintenanceAssetLeasedDtos);
         payloadBuilder.page(page);
         payloadBuilder.limit(limit);
-        payloadBuilder.total(maintenanceAssetLeasedRepository.countTotal(from, to, searchText, status));
+        payloadBuilder.total(maintenanceAssetLeasedRepository.countTotal(from, to, searchText, status, username));
         return payloadBuilder.build();
     }
 }

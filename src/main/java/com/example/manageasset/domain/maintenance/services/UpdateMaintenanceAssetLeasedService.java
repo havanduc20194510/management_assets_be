@@ -7,6 +7,7 @@ import com.example.manageasset.domain.maintenance.dtos.MaintenanceAssetLeasedDto
 import com.example.manageasset.domain.maintenance.models.MaintenanceAssetLeased;
 import com.example.manageasset.domain.maintenance.repositories.MaintenanceAssetLeasedRepository;
 import com.example.manageasset.domain.maintenance.repositories.MaintenanceAssetRepository;
+import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.exceptions.InvalidRequestException;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
 import com.example.manageasset.domain.shared.models.Millisecond;
@@ -26,7 +27,6 @@ import java.util.List;
 public class UpdateMaintenanceAssetLeasedService {
     private final MaintenanceAssetLeasedRepository maintenanceAssetLeasedRepository;
     private final MaintenanceAssetRepository maintenanceAssetRepository;
-    private final UserRepository userRepository;
     private final AssetLeasedRepository assetLeasedRepository;
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -35,14 +35,16 @@ public class UpdateMaintenanceAssetLeasedService {
         if (maintenanceAssetLeased == null)
             throw new NotFoundException(String.format("MaintenanceAssetLeased[id=%s] not found", maintenanceAssetLeasedDto.getId()));
 
-        User user = userRepository.findById(maintenanceAssetLeasedDto.getUserDto().getId());
-        if (user == null)
-            throw new NotFoundException(String.format("User[id=%d] not found", maintenanceAssetLeasedDto.getUserDto().getId()));
-        User client = userRepository.findById(maintenanceAssetLeasedDto.getClientDto().getId());
-        if (client == null)
-            throw new NotFoundException(String.format("Client[id=%d] not found", maintenanceAssetLeasedDto.getClientDto().getId()));
+        String username = "cuongpm";
+        if(!maintenanceAssetLeased.getClient().getUsername().equals(username))
+            throw new InvalidDataException("Client updating this maintenance asset leased is not client create");
+
         if(CollectionUtils.isEmpty(maintenanceAssetLeasedDto.getAssetLeasedDtos())){
             throw new InvalidRequestException("List asset leased cannot empty");
+        }
+
+        if(maintenanceAssetLeased.getStatus().asInt() > 0){
+            throw new InvalidRequestException(String.format("MaintenanceAssetLeased[id=%s] processed, cannot update", maintenanceAssetLeasedDto.getId()));
         }
 
         List<AssetLeased> assetLeaseds = new ArrayList<>();
@@ -53,7 +55,7 @@ public class UpdateMaintenanceAssetLeasedService {
             assetLeaseds.add(assetLeased);
         }
 
-        maintenanceAssetLeased.update(client, user, maintenanceAssetLeasedDto.getReason(), new Millisecond(maintenanceAssetLeasedDto.getCompletedAt()), new Millisecond(maintenanceAssetLeasedDto.getStartedAt()), maintenanceAssetLeasedDto.getNote());
+        maintenanceAssetLeased.update(maintenanceAssetLeasedDto.getReason(), new Millisecond(maintenanceAssetLeasedDto.getCompletedAt()), new Millisecond(maintenanceAssetLeasedDto.getStartedAt()), maintenanceAssetLeasedDto.getNote());
         maintenanceAssetLeased.setAssetLeaseds(assetLeaseds);
         maintenanceAssetRepository.deleteAllByMaintenanceId(maintenanceAssetLeasedDto.getId());
         maintenanceAssetLeasedRepository.save(maintenanceAssetLeased);
