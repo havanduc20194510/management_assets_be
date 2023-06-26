@@ -11,6 +11,6 @@ public interface LeaseContractRepository {
     void save(LeaseContract leaseContract);
     LeaseContract findById(String id);
     void deleteById(String id);
-    List<LeaseContract> list(QueryFilter queryFilter, String searchText, Long leasedAtFrom, Long leasedAtTo, Status status);
-    long totalList(String searchText, Long leasedAtFrom, Long leasedAtTo, Status status);
+    List<LeaseContract> list(QueryFilter queryFilter, String searchText, Long leasedAtFrom, Long leasedAtTo, Status status, String username);
+    long totalList(String searchText, Long leasedAtFrom, Long leasedAtTo, Status status, String username);
 }

@@ -6,6 +6,7 @@ import com.example.manageasset.domain.shared.utility.Constants;
 import com.example.manageasset.domain.shared.utility.ULID;
 import com.example.manageasset.domain.user.dtos.UserDto;
 import com.example.manageasset.domain.user.models.Department;
+import com.example.manageasset.domain.user.models.Role;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.DepartmentRepository;
 import com.example.manageasset.domain.user.repositories.UserRepository;
@@ -51,7 +52,7 @@ public class CreateUserService {
                 userDto.getDateOfBirth(),
                 userDto.getUsername(),
                 userDto.getPassword(),
-                userDto.getPosition(),
+                Role.fromValue(userDto.getPosition()).name(),
                 FirebaseStorageConfig.getURL(blob, nameFile).toString(),
                 department
         );

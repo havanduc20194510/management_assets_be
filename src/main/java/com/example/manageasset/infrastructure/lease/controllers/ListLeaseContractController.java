@@ -39,4 +39,20 @@ public class ListLeaseContractController {
 
         return new ResponseEntity<>(new ResponseBody(listLeaseContractService.list(searchText, page, limit,sort, leasedAtFrom, leasedAtTo, status), ResponseBody.Status.SUCCESS, ResponseBody.Code.SUCCESS), HttpStatus.OK);
     }
+
+    @GetMapping("/list-by-user")
+    public ResponseEntity<?> listByUser(@RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
+                                  @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                                  @RequestParam(value = "sort", required = false, defaultValue = "desc") String sort,
+                                  @RequestParam(value = "key", required = false) String searchText,
+                                  @RequestParam(value = "from", required = false) Long leasedAtFrom,
+                                  @RequestParam(value = "to", required = false) Long leasedAtTo,
+                                  @RequestParam(value = "status", required = false) Integer status) throws ParseException {
+
+        if(leasedAtTo != null) {
+            leasedAtTo += 86399000;
+        }
+
+        return new ResponseEntity<>(new ResponseBody(listLeaseContractService.listByUser(searchText, page, limit,sort, leasedAtFrom, leasedAtTo, status), ResponseBody.Status.SUCCESS, ResponseBody.Code.SUCCESS), HttpStatus.OK);
+    }
 }
