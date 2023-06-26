@@ -24,15 +24,13 @@ public class RevokeContract {
     private Millisecond updatedAt;
     private Boolean isDeleted;
 
-    public static RevokeContract create(String id, User client, User user, String reason, Millisecond revokedAt, String note, LeaseContract leaseContract){
+    public static RevokeContract create(String id, User user, String reason, Millisecond revokedAt, String note, LeaseContract leaseContract){
         validate(id, reason);
-        return new RevokeContract(id, client, user, reason, revokedAt, note, leaseContract, Millisecond.now(), Millisecond.now(), false);
+        return new RevokeContract(id, user, leaseContract.getClient(), reason, revokedAt, note, leaseContract, Millisecond.now(), Millisecond.now(), false);
     }
 
-    public void update(User client, User user, String reason, Millisecond revokedAt, String note){
+    public void update(String reason, Millisecond revokedAt, String note){
         validate(reason);
-        this.client = client;
-        this.user = user;
         this.reason = reason;
         this.revokedAt = revokedAt;
         this.note = note;

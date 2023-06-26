@@ -11,6 +11,7 @@ import com.example.manageasset.domain.revoke.repositories.RevokeContractReposito
 import com.example.manageasset.domain.shared.exceptions.InvalidRequestException;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
 import com.example.manageasset.domain.shared.models.Millisecond;
+import com.example.manageasset.domain.shared.models.Status;
 import com.example.manageasset.domain.shared.utility.ULID;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.UserRepository;
@@ -31,19 +32,19 @@ public class CreateRevokeContractService {
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void create(RevokeContractDto revokeContractDto) throws NotFoundException {
-        User user = userRepository.findById(revokeContractDto.getUserDto().getId());
+        String username = "cuongpm";
+        User user = userRepository.findByUsername(username);
         if (user == null)
             throw new NotFoundException(String.format("User[id=%d] not found", revokeContractDto.getUserDto().getId()));
-        User client = userRepository.findById(revokeContractDto.getClientDto().getId());
-        if (client == null)
-            throw new NotFoundException(String.format("Client[id=%d] not found", revokeContractDto.getClientDto().getId()));
         LeaseContract leaseContract = leaseContractRepository.findById(revokeContractDto.getLeaseContractDto().getId());
         if (leaseContract == null)
             throw new NotFoundException(String.format("LeaseContract[id=%s] not found", revokeContractDto.getLeaseContractDto().getId()));
+        if(leaseContract.getStatus().asInt() != Status.APPROVED_TYPE){
+            throw new InvalidRequestException(String.format("LeaseContract[id=%s] not approved yet", revokeContractDto.getLeaseContractDto().getId()));
+        }
         if(revokeContractRepository.existedRevokeForLease(revokeContractDto.getLeaseContractDto().getId()))
             throw new InvalidRequestException(String.format("LeaseContract[id=%s] was revoked", revokeContractDto.getLeaseContractDto().getId()));
-
-        RevokeContract revokeContract = RevokeContract.create(new ULID().nextULID(), client, user, revokeContractDto.getReason(), new Millisecond(revokeContractDto.getRevokedAt()), revokeContractDto.getNote(), leaseContract);
+        RevokeContract revokeContract = RevokeContract.create(new ULID().nextULID(), user, revokeContractDto.getReason(), new Millisecond(revokeContractDto.getRevokedAt()), revokeContractDto.getNote(), leaseContract);
 
         List<AssetLeased> assetLeaseds = leaseContract.getAssetLeaseds();
         for(AssetLeased assetLeased: assetLeaseds){

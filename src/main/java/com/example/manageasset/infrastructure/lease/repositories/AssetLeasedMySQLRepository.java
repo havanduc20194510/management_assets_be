@@ -31,4 +31,19 @@ public class AssetLeasedMySQLRepository implements AssetLeasedRepository {
     public List<AssetLeased> findByMaintenanceId(String maintenanceId) {
         return assetLeasedJpa.findByMaintenanceId(maintenanceId).stream().map(AssetLeasedEntity::toModel).collect(Collectors.toList());
     }
+
+    @Override
+    public Boolean existedAssetForLeased(Long assetId) {
+        return assetLeasedJpa.existedAssetForLeased(assetId);
+    }
+
+    @Override
+    public Boolean checkLeaseContractEligibilityToMaintenance(List<Long> assetLeasedIds) {
+        return assetLeasedJpa.checkLeaseContractEligibilityToMaintenance(assetLeasedIds);
+    }
+
+    @Override
+    public Boolean checkLeaseContractExistedRevoke(List<Long> assetLeasedIds) {
+        return assetLeasedJpa.checkLeaseContractExistedRevoke(assetLeasedIds);
+    }
 }
