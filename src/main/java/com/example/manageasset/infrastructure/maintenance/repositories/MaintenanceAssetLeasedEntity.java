@@ -2,6 +2,7 @@ package com.example.manageasset.infrastructure.maintenance.repositories;
 
 import com.example.manageasset.domain.maintenance.models.MaintenanceAssetLeased;
 import com.example.manageasset.domain.shared.models.Millisecond;
+import com.example.manageasset.domain.shared.models.Status;
 import com.example.manageasset.infrastructure.user.repositories.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +36,8 @@ public class MaintenanceAssetLeasedEntity {
     private Timestamp updatedAt;
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
+    @Column(name = "status", nullable = false)
+    private Integer status;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
@@ -52,6 +55,7 @@ public class MaintenanceAssetLeasedEntity {
                 new Timestamp(maintenanceAssetLeased.getCreatedAt().asLong()),
                 new Timestamp(maintenanceAssetLeased.getUpdatedAt().asLong()),
                 maintenanceAssetLeased.getIsDeleted(),
+                maintenanceAssetLeased.getStatus().asInt(),
                 UserEntity.fromModel(maintenanceAssetLeased.getUser()),
                 UserEntity.fromModel(maintenanceAssetLeased.getClient())
         );
@@ -68,7 +72,8 @@ public class MaintenanceAssetLeasedEntity {
                 note,
                 new Millisecond(createdAt.getTime()),
                 new Millisecond(updatedAt.getTime()),
-                isDeleted
+                isDeleted,
+                new Status(status)
         );
     }
 }

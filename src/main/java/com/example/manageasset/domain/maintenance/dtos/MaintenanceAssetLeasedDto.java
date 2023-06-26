@@ -41,6 +41,8 @@ public class MaintenanceAssetLeasedDto {
     private Long createdAt;
     @JsonProperty("updated_at")
     private Long updatedAt;
+    @JsonProperty("status")
+    private Integer status;
 
 
 
@@ -55,7 +57,8 @@ public class MaintenanceAssetLeasedDto {
                 maintenanceAssetLeased.getNote(),
                 CollectionUtils.isEmpty(maintenanceAssetLeased.getAssetLeaseds()) ? null : maintenanceAssetLeased.getAssetLeaseds().stream().map(AssetLeasedDto::fromModel).collect(Collectors.toList()),
                 maintenanceAssetLeased.getCreatedAt().asLong(),
-                maintenanceAssetLeased.getUpdatedAt().asLong()
+                maintenanceAssetLeased.getUpdatedAt().asLong(),
+                maintenanceAssetLeased.getStatus().asInt()
         );
     }
 }
