@@ -30,12 +30,13 @@ public class ListLeaseContractController {
                                   @RequestParam(value = "sort", required = false, defaultValue = "desc") String sort,
                                   @RequestParam(value = "key", required = false) String searchText,
                                   @RequestParam(value = "from", required = false) Long leasedAtFrom,
-                                  @RequestParam(value = "to", required = false) Long leasedAtTo) throws ParseException {
+                                  @RequestParam(value = "to", required = false) Long leasedAtTo,
+                                  @RequestParam(value = "status", required = false) Integer status) throws ParseException {
 
         if(leasedAtTo != null) {
             leasedAtTo += 86399000;
         }
 
-        return new ResponseEntity<>(new ResponseBody(listLeaseContractService.list(searchText, page, limit,sort, leasedAtFrom, leasedAtTo), ResponseBody.Status.SUCCESS, ResponseBody.Code.SUCCESS), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(listLeaseContractService.list(searchText, page, limit,sort, leasedAtFrom, leasedAtTo, status), ResponseBody.Status.SUCCESS, ResponseBody.Code.SUCCESS), HttpStatus.OK);
     }
 }

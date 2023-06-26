@@ -6,10 +6,14 @@ import com.example.manageasset.domain.lease.models.AssetLeased;
 import com.example.manageasset.domain.lease.models.LeaseContract;
 import com.example.manageasset.domain.lease.repositories.AssetLeasedRepository;
 import com.example.manageasset.domain.lease.repositories.LeaseContractRepository;
+import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
+import com.example.manageasset.domain.user.models.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 public class DeleteLeaseContractService {
@@ -31,6 +35,9 @@ public class DeleteLeaseContractService {
         if (leaseContract == null) throw new NotFoundException(String.format("LeaseContract[id=%s] not found", id));
 
         checkProcessLeaseContractService.check(leaseContract);
+
+        String username = "cuongpm";
+        if(!leaseContract.getClient().getUsername().equals(username)) throw new  InvalidDataException("Client is deleting lease contract is not client create lease contract");
 
         for (AssetLeased assetLeased : leaseContract.getAssetLeaseds()) {
             Asset asset = assetRepository.getById(assetLeased.getAsset().getId());

@@ -36,14 +36,12 @@ public class CreateLeaseContractService {
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void create(LeaseContractDto leaseContractDto) throws NotFoundException {
-        User user = userRepository.findById(leaseContractDto.getUserDto().getId());
-        if (user == null)
-            throw new NotFoundException(String.format("User[id=%d] not found", leaseContractDto.getUserDto().getId()));
-        User client = userRepository.findById(leaseContractDto.getClientDto().getId());
+        String username = "cuongpm";
+        User client = userRepository.findByUsername(username);
         if (client == null)
             throw new NotFoundException(String.format("Client[id=%d] not found", leaseContractDto.getClientDto().getId()));
 
-        LeaseContract leaseContract = LeaseContract.create(new ULID().nextULID(), client, user, leaseContractDto.getReason(), new Millisecond(leaseContractDto.getRevokedAt()), new Millisecond(leaseContractDto.getLeasedAt()), leaseContractDto.getNote());
+        LeaseContract leaseContract = LeaseContract.create(new ULID().nextULID(), client, leaseContractDto.getReason(), new Millisecond(leaseContractDto.getRevokedAt()), new Millisecond(leaseContractDto.getLeasedAt()), leaseContractDto.getNote());
 
         List<AssetLeased> assetLeaseds = new ArrayList<>();
         for (AssetLeasedDto assetLeasedDto : leaseContractDto.getAssetLeasedDtos()) {

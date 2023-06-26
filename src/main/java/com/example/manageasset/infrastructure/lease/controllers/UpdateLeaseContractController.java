@@ -24,4 +24,11 @@ public class UpdateLeaseContractController {
         updateLeaseContractService.update(leaseContractDto);
         return new ResponseEntity<>(new ResponseBody(PagingPayload.empty(), ResponseBody.Status.SUCCESS, ResponseBody.Code.SUCCESS), HttpStatus.OK);
     }
+
+    @PutMapping("/update-status/{id}")
+    public ResponseEntity<?> updateStatus(@RequestParam("status") Integer status,
+                                          @PathVariable("id") String id) throws NotFoundException {
+        updateLeaseContractService.updateStatus(id, status);
+        return new ResponseEntity<>(new ResponseBody(PagingPayload.empty(), ResponseBody.Status.SUCCESS, ResponseBody.Code.SUCCESS), HttpStatus.OK);
+    }
 }

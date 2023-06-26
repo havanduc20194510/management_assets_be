@@ -38,6 +38,7 @@ public class LeaseContractDto {
     private Long createdAt;
     @JsonProperty("updated_at")
     private Long updatedAt;
+    private Integer status;
 
     public static LeaseContractDto fromModel(LeaseContract leaseContract){
         return new LeaseContractDto(
@@ -50,7 +51,8 @@ public class LeaseContractDto {
                 leaseContract.getNote(),
                 leaseContract.getAssetLeaseds().stream().map(AssetLeasedDto::fromModel).collect(Collectors.toList()),
                 leaseContract.getCreatedAt().asLong(),
-                leaseContract.getUpdatedAt().asLong()
+                leaseContract.getUpdatedAt().asLong(),
+                leaseContract.getStatus().asInt()
         );
     }
 }
