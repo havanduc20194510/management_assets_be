@@ -80,6 +80,7 @@ public class UpdateLeaseContractService {
         return assetLeaseds.stream().filter(assetLeased -> Objects.equals(assetLeased.getAsset().getId(), assetId)).findAny().orElse(null);
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void updateStatus(String id, Integer status) throws NotFoundException {
         String username = "cuongpm";
         User user = userRepository.findByUsername(username);
@@ -87,8 +88,20 @@ public class UpdateLeaseContractService {
         LeaseContract leaseContract = leaseContractRepository.findById(id);
         if (leaseContract == null) throw new NotFoundException(String.format("LeaseContract[id=%s] not found", id));
 
+        checkProcessLeaseContractService.check(leaseContract);
+
         leaseContract.update(new Status(status), user);
 
         leaseContractRepository.save(leaseContract);
+
+        if(status == Status.REJECT_TYPE){
+            for (AssetLeased assetLeased : leaseContract.getAssetLeaseds()) {
+                Asset asset = assetRepository.getById(assetLeased.getAsset().getId());
+                if (asset == null) continue;
+
+                int quantity = asset.getQuantity();
+                assetRepository.updateQuantity(quantity + assetLeased.getQuantityLease(), asset.getId());
+            }
+        }
     }
 }
