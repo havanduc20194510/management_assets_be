@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class GetAssetController {
     private final GetAssetService getAssetService;
 
-    @GetMapping("/get-by-id/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<?> get(@PathVariable("id") Long id) throws NotFoundException {
         AssetDto assetDto = getAssetService.get(id);
         PagingPayload.PagingPayloadBuilder<AssetDto> payloadBuilder = PagingPayload.builder();

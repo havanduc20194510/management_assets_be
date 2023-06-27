@@ -27,6 +27,9 @@ public class ListAssetStatisticController {
                                   @RequestParam(value = "key", required = false) String searchText,
                                   @RequestParam(value = "from", required = false) Long from,
                                   @RequestParam(value = "to", required = false) Long to) {
+        if(to != null){
+            to += 86399000;
+        }
         PagingPayload<List<AssetStatisticDto>> result = listAssetStatisticService.getAll(limit, page, sort, from, to, searchText, categoryId);
         return new ResponseEntity<>(new ResponseBody(result, ResponseBody.Status.SUCCESS, ResponseBody.Code.SUCCESS), HttpStatus.OK);
     }

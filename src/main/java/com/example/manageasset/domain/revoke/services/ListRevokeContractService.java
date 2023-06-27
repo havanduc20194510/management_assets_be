@@ -8,6 +8,8 @@ import com.example.manageasset.domain.revoke.repositories.RevokeContractReposito
 import com.example.manageasset.domain.shared.models.PagingPayload;
 import com.example.manageasset.domain.shared.models.QueryFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +22,24 @@ public class ListRevokeContractService {
     private final LeaseContractRepository leaseContractRepository;
 
     public PagingPayload<List<RevokeContractDto>> getAll(Integer limit, Integer page, String sort, Long from, Long to, String searchText) {
-        String username = null;
+        QueryFilter filter = QueryFilter.create(limit, page, sort);
+        List<RevokeContract> revokeContracts = revokeContractRepository.getAll(filter, from, to, searchText, null);
+        revokeContracts.forEach(revokeContract -> {
+            LeaseContract leaseContract = leaseContractRepository.findById(revokeContract.getLeaseContract().getId());
+            revokeContract.setLeaseContract(leaseContract);
+        });
+        List<RevokeContractDto> revokeContractDtos = revokeContracts.stream().map(RevokeContractDto::fromModel).collect(Collectors.toList());
+        PagingPayload.PagingPayloadBuilder<List<RevokeContractDto>> payloadBuilder = PagingPayload.builder();
+        payloadBuilder.data(revokeContractDtos);
+        payloadBuilder.page(page);
+        payloadBuilder.limit(limit);
+        payloadBuilder.total(revokeContractRepository.countTotal(from, to, searchText, null));
+        return payloadBuilder.build();
+    }
+
+    public PagingPayload<List<RevokeContractDto>> getAllByUser(Integer limit, Integer page, String sort, Long from, Long to, String searchText) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
         QueryFilter filter = QueryFilter.create(limit, page, sort);
         List<RevokeContract> revokeContracts = revokeContractRepository.getAll(filter, from, to, searchText, username);
         revokeContracts.forEach(revokeContract -> {

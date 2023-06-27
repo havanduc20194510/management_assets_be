@@ -18,7 +18,6 @@ public class ListAssetStatisticService {
     private final AssetStatisticRepository assetStatisticRepository;
 
     public PagingPayload<List<AssetStatisticDto>> getAll(Integer limit, Integer page, String sort, Long from, Long to, String searchText, Long categoryId) {
-        String username = null;
         QueryFilter filter = QueryFilter.create(limit, page, sort);
         List<AssetStatistic> assetStatistics = assetStatisticRepository.getAll(filter, searchText, categoryId, from, to);
         List<AssetStatisticDto> assetStatisticDtos = assetStatistics.stream().map(AssetStatisticDto::fromModel).collect(Collectors.toList());

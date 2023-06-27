@@ -28,7 +28,7 @@ public class ListRevokeContractOfCurrentUserController {
         if(to != null){
             to += 86399000;
         }
-        PagingPayload<List<RevokeContractDto>> result = listRevokeContractService.getAll(limit, page, sort, from, to, searchText);
+        PagingPayload<List<RevokeContractDto>> result = listRevokeContractService.getAllByUser(limit, page, sort, from, to, searchText);
         return new ResponseEntity<>(new ResponseBody(result, ResponseBody.Status.SUCCESS, ResponseBody.Code.SUCCESS), HttpStatus.OK);
     }
 }

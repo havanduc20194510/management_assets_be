@@ -28,8 +28,4 @@ public interface MaintenanceAssetLeasedJpa extends JpaRepository<MaintenanceAsse
             "AND (:status is null or m.status = :status) " +
             "AND (:username is null or m.client.username = :username)")
     Long countTotal(@Param("from") Timestamp from, @Param("to") Timestamp to, @Param("searchText") String searchText, @Param("status") Integer status, @Param("username") String username);
-    @Modifying
-    @Transactional
-    @Query("update MaintenanceAssetLeasedEntity m set m.updatedAt = :updatedAt, m.status = :status where m.id = :id")
-    void changeStatus(@Param("id") String id, @Param("status") Integer status, @Param("updatedAt") Timestamp updatedAt);
 }
