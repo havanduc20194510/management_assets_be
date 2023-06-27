@@ -1,7 +1,5 @@
 package com.example.manageasset.infrastructure.revoke.controllers;
 
-import com.example.manageasset.domain.asset.dtos.AssetDto;
-import com.example.manageasset.domain.asset.services.asset.GetAssetService;
 import com.example.manageasset.domain.revoke.dtos.RevokeContractDto;
 import com.example.manageasset.domain.revoke.services.GetRevokeContractService;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
@@ -19,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class GetRevokeContractController {
     private final GetRevokeContractService getRevokeContractService;
 
-    @GetMapping("/get-by-id/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<?> get(@PathVariable("id") String id) throws NotFoundException {
         RevokeContractDto revokeContractDto = getRevokeContractService.get(id);
         PagingPayload.PagingPayloadBuilder<RevokeContractDto> payloadBuilder = PagingPayload.builder();
