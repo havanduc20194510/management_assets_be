@@ -6,12 +6,14 @@ import com.example.manageasset.domain.shared.utility.Constants;
 import com.example.manageasset.domain.shared.utility.ULID;
 import com.example.manageasset.domain.user.dtos.UserDto;
 import com.example.manageasset.domain.user.models.Department;
+import com.example.manageasset.domain.user.models.Role;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.DepartmentRepository;
 import com.example.manageasset.domain.user.repositories.UserRepository;
 import com.example.manageasset.infrastructure.shared.configs.FirebaseStorageConfig;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,13 +24,16 @@ public class CreateUserService {
     private final DepartmentRepository departmentRepository;
     private final UserRepository userRepository;
     private final Bucket bucket;
+    private final PasswordEncoder passwordEncoder;
 
     public CreateUserService(DepartmentRepository departmentRepository,
                              UserRepository userRepository,
-                             Bucket bucket) {
+                             Bucket bucket,
+                             PasswordEncoder passwordEncoder) {
         this.departmentRepository = departmentRepository;
         this.userRepository = userRepository;
         this.bucket = bucket;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void create(MultipartFile file, UserDto userDto) throws IOException, NotFoundException {
@@ -51,10 +56,12 @@ public class CreateUserService {
                 userDto.getDateOfBirth(),
                 userDto.getUsername(),
                 userDto.getPassword(),
-                userDto.getPosition(),
+                Role.fromValue(userDto.getPosition()).name(),
                 FirebaseStorageConfig.getURL(blob, nameFile).toString(),
                 department
         );
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
     }

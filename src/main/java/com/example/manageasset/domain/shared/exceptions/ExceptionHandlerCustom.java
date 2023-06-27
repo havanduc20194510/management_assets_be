@@ -4,6 +4,8 @@ import com.example.manageasset.domain.shared.models.PagingPayload;
 import com.example.manageasset.domain.shared.models.ResponseBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -83,6 +85,18 @@ public class ExceptionHandlerCustom {
                         ResponseBody.Status.FAILED,
                         e.getMessage(),
                         ResponseBody.Code.NOT_FOUND)
+        );
+    }
+
+    @ExceptionHandler({AuthenticationException.class, AccessDeniedException.class})
+    public ResponseEntity<Object> handleAuthenticationException(Exception e) {
+        e.printStackTrace();
+        log.error("Unauthorized request: " + e.getMessage(), e);
+        return ResponseEntity.ok(
+                new ResponseBody(PagingPayload.empty(),
+                        ResponseBody.Status.FAILED,
+                        e.getMessage(),
+                        ResponseBody.Code.UNAUTHORIZED_REQUEST)
         );
     }
 }

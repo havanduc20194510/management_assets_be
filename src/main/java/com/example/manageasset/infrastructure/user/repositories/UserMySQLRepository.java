@@ -73,6 +73,10 @@ public class UserMySQLRepository implements UserRepository {
                 predicates.add(
                         criteriaBuilder.equal(root.get("departmentEntity").get("id"), departmentId)
                 );
+
+                predicates.add(
+                        criteriaBuilder.equal(root.get("departmentEntity").get("isDeleted"), false)
+                );
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
@@ -121,6 +125,10 @@ public class UserMySQLRepository implements UserRepository {
             if(departmentId !=null) {
                 predicates.add(
                         criteriaBuilder.equal(root.get("departmentEntity").get("id"), departmentId)
+                );
+
+                predicates.add(
+                        criteriaBuilder.equal(root.get("departmentEntity").get("isDeleted"), false)
                 );
             }
 
