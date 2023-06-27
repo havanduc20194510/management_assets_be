@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class GetMaintenanceAssetLeasedController {
     private final GetMaintenanceAssetLeasedService getMaintenanceAssetLeasedService;
 
-    @GetMapping("/get-by-id/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<?> get(@PathVariable("id") String id) throws NotFoundException {
         MaintenanceAssetLeasedDto maintenanceAssetLeasedDto = getMaintenanceAssetLeasedService.get(id);
         PagingPayload.PagingPayloadBuilder<MaintenanceAssetLeasedDto> payloadBuilder = PagingPayload.builder();

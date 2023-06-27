@@ -71,6 +71,26 @@ public class SecurityConfig {
                 .antMatchers("/lease-contract/update-status/**").hasAnyAuthority("ADMIN", "STAFF")
                 .antMatchers("/lease-contract/list*").hasAnyAuthority("ADMIN", "STAFF")
 
+                // maintenance
+                .antMatchers("/maintenance-asset-leased/create").hasAnyAuthority("ADMIN", "STAFF", "USER")
+                .antMatchers("/maintenance-asset-leased/update").hasAnyAuthority("ADMIN", "STAFF", "USER")
+                .antMatchers("/maintenance-asset-leased/get/**").hasAnyAuthority("ADMIN", "STAFF", "USER")
+                .antMatchers("/maintenance-asset-leased/delete/**").hasAnyAuthority("ADMIN", "STAFF", "USER")
+                .antMatchers("/maintenance-asset-leased/list-by-user*").hasAnyAuthority("ADMIN", "STAFF", "USER")
+                .antMatchers("/maintenance-asset-leased/update-status/**").hasAnyAuthority("ADMIN", "STAFF")
+                .antMatchers("/maintenance-asset-leased/list*").hasAnyAuthority("ADMIN", "STAFF")
+
+                // revoke
+                .antMatchers("/revoke-contract/create").hasAnyAuthority("ADMIN", "STAFF", "USER")
+                .antMatchers("/revoke-contract/update").hasAnyAuthority("ADMIN", "STAFF", "USER")
+                .antMatchers("/revoke-contract/get/**").hasAnyAuthority("ADMIN", "STAFF", "USER")
+                .antMatchers("/revoke-contract/delete/**").hasAnyAuthority("ADMIN", "STAFF", "USER")
+                .antMatchers("/revoke-contract/list-by-user*").hasAnyAuthority("ADMIN", "STAFF", "USER")
+                .antMatchers("/revoke-contract/list*").hasAnyAuthority("ADMIN", "STAFF")
+
+                // statistic
+                .antMatchers("/asset/statistic*").hasAnyAuthority("ADMIN", "STAFF")
+
                 .anyRequest()
                 .authenticated()
                 .and()

@@ -11,5 +11,4 @@ public interface MaintenanceAssetLeasedRepository {
     Long countTotal(Long from, Long to, String searchText, Integer status, String username);
     MaintenanceAssetLeased getById(String id);
     void delete(String id);
-    void changeStatus(String id, Integer status);
 }

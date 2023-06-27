@@ -75,8 +75,4 @@ public class MaintenanceAssetLeasedMySQLRepository implements MaintenanceAssetLe
         maintenanceAssetLeasedJpa.deleteById(id, new Timestamp(Millisecond.now().asLong()));
     }
 
-    @Override
-    public void changeStatus(String id, Integer status) {
-        maintenanceAssetLeasedJpa.changeStatus(id, status, new Timestamp(Millisecond.now().asLong()));
-    }
 }

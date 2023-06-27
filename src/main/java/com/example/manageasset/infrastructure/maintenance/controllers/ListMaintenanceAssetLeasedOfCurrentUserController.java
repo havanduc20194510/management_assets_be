@@ -29,7 +29,7 @@ public class ListMaintenanceAssetLeasedOfCurrentUserController {
         if(to != null){
             to += 86399000;
         }
-        PagingPayload<List<MaintenanceAssetLeasedDto>> result = listMaintenanceAssetLeasedService.getAll(limit, page, sort, from, to, searchText, status);
+        PagingPayload<List<MaintenanceAssetLeasedDto>> result = listMaintenanceAssetLeasedService.getAllByUser(limit, page, sort, from, to, searchText, status);
         return new ResponseEntity<>(new ResponseBody(result, ResponseBody.Status.SUCCESS, ResponseBody.Code.SUCCESS), HttpStatus.OK);
     }
 }

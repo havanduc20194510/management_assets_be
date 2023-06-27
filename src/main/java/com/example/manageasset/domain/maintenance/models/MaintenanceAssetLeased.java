@@ -79,4 +79,10 @@ public class MaintenanceAssetLeased {
     private static void validate(String reason){
         if(Strings.isNullOrEmpty(reason)) throw new InvalidDataException("Required field MaintenanceAssetLeased[reason]");
     }
+
+    public void updateStatus(Status status, User user){
+        this.status = status;
+        this.user = user;
+        this.updatedAt = Millisecond.now();
+    }
 }

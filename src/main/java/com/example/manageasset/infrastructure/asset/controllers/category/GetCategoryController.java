@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class GetCategoryController {
     private final GetCategoryService getCategoryService;
 
-    @GetMapping("/get-by-id/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<?> get(@PathVariable("id") Long id) throws NotFoundException {
         CategoryDto categoryDto = getCategoryService.get(id);
         PagingPayload.PagingPayloadBuilder<CategoryDto> payloadBuilder = PagingPayload.builder();
