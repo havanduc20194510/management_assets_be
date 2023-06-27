@@ -30,4 +30,5 @@ public interface AssetJpa extends JpaRepository<AssetEntity, Long> {
     void updateQuantity(@Param("quantity") Integer quantity, @Param("updatedAt") Timestamp updatedAt, @Param("assetId") Long assetId);
     @Query("SELECT COUNT(a)>0 FROM AssetEntity a WHERE a.category.id = :categoryId")
     Boolean existedAssetInCategory(@Param("categoryId") Long categoryId);
+
 }
