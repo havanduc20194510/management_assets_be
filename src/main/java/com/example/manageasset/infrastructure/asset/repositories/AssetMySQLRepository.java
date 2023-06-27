@@ -53,4 +53,9 @@ public class AssetMySQLRepository implements AssetRepository {
         assetJpa.updateQuantity(quantity, new Timestamp(Millisecond.now().asLong()), assetId);
     }
 
+    @Override
+    public Boolean existedAssetInCategory(Long categoryId) {
+        return assetJpa.existedAssetInCategory(categoryId);
+    }
+
 }

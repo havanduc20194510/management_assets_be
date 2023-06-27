@@ -75,7 +75,7 @@ public class LeaseContractEntity {
                 new Timestamp(leaseContract.getCreatedAt().asLong()),
                 new Timestamp(leaseContract.getUpdatedAt().asLong()),
                 leaseContract.getIsDeleted(),
-                UserEntity.fromModel(leaseContract.getUser()),
+                leaseContract.getUser() == null ? null : UserEntity.fromModel(leaseContract.getUser()),
                 UserEntity.fromModel(leaseContract.getClient()),
                 leaseContract.getStatus().asInt()
         );

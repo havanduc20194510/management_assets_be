@@ -7,8 +7,9 @@ import java.util.List;
 
 public interface MaintenanceAssetLeasedRepository {
     void save(MaintenanceAssetLeased maintenanceAssetLeased);
-    List<MaintenanceAssetLeased> getAll(QueryFilter queryFilter, Long from, Long to, String searchText);
-    Long countTotal(Long from, Long to, String searchText);
+    List<MaintenanceAssetLeased> getAll(QueryFilter queryFilter, Long from, Long to, String searchText, Integer status, String username);
+    Long countTotal(Long from, Long to, String searchText, Integer status, String username);
     MaintenanceAssetLeased getById(String id);
     void delete(String id);
+    void changeStatus(String id, Integer status);
 }

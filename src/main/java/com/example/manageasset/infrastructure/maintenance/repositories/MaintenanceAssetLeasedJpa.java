@@ -18,10 +18,18 @@ public interface MaintenanceAssetLeasedJpa extends JpaRepository<MaintenanceAsse
     void deleteById(@Param("id") String id, @Param("updatedAt") Timestamp updatedAt);
     @Query("SELECT m FROM MaintenanceAssetLeasedEntity m WHERE m.isDeleted = false " +
             "AND (:searchText is null or m.client.fullName like %:searchText%) " +
-            "AND ((:from is null or (m.startedAt >= :from)) and (:to is null or (m.startedAt <= :to)))")
-    List<MaintenanceAssetLeasedEntity> findAll(Pageable pageable, @Param("from") Timestamp from, @Param("to") Timestamp to, @Param("searchText") String searchText);
+            "AND ((:from is null or (m.startedAt >= :from)) and (:to is null or (m.startedAt <= :to))) " +
+            "AND (:status is null or m.status = :status) " +
+            "AND (:username is null or m.client.username = :username)")
+    List<MaintenanceAssetLeasedEntity> findAll(Pageable pageable, @Param("from") Timestamp from, @Param("to") Timestamp to, @Param("searchText") String searchText, @Param("status") Integer status, @Param("username") String username);
     @Query("SELECT COUNT(m) FROM MaintenanceAssetLeasedEntity m WHERE m.isDeleted = false " +
             "AND (:searchText is null or m.client.fullName like %:searchText%) " +
-            "AND ((:from is null or (m.startedAt >= :from)) and (:to is null or (m.startedAt <= :to)))")
-    Long countTotal(@Param("from") Timestamp from, @Param("to") Timestamp to, @Param("searchText") String searchText);
+            "AND ((:from is null or (m.startedAt >= :from)) and (:to is null or (m.startedAt <= :to))) " +
+            "AND (:status is null or m.status = :status) " +
+            "AND (:username is null or m.client.username = :username)")
+    Long countTotal(@Param("from") Timestamp from, @Param("to") Timestamp to, @Param("searchText") String searchText, @Param("status") Integer status, @Param("username") String username);
+    @Modifying
+    @Transactional
+    @Query("update MaintenanceAssetLeasedEntity m set m.updatedAt = :updatedAt, m.status = :status where m.id = :id")
+    void changeStatus(@Param("id") String id, @Param("status") Integer status, @Param("updatedAt") Timestamp updatedAt);
 }

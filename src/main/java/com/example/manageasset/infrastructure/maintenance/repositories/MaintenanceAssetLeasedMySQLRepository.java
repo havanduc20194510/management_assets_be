@@ -37,7 +37,7 @@ public class MaintenanceAssetLeasedMySQLRepository implements MaintenanceAssetLe
     }
 
     @Override
-    public List<MaintenanceAssetLeased> getAll(QueryFilter queryFilter, Long from, Long to, String searchText) {
+    public List<MaintenanceAssetLeased> getAll(QueryFilter queryFilter, Long from, Long to, String searchText, Integer status, String username) {
         Pageable pageable = PageRequest.of(queryFilter.getPage(), queryFilter.getLimit(),
                 queryFilter.getSort().equals("asc") ? Sort.by("startedAt").ascending() : Sort.by("startedAt").descending());
         Timestamp fromDate = null;
@@ -48,11 +48,11 @@ public class MaintenanceAssetLeasedMySQLRepository implements MaintenanceAssetLe
         if(to != null){
             toDate = new Timestamp(to);
         }
-        return maintenanceAssetLeasedJpa.findAll(pageable, fromDate, toDate, searchText).stream().map(MaintenanceAssetLeasedEntity::toModel).collect(Collectors.toList());
+        return maintenanceAssetLeasedJpa.findAll(pageable, fromDate, toDate, searchText, status, username).stream().map(MaintenanceAssetLeasedEntity::toModel).collect(Collectors.toList());
     }
 
     @Override
-    public Long countTotal(Long from, Long to, String searchText) {
+    public Long countTotal(Long from, Long to, String searchText, Integer status, String username) {
         Timestamp fromDate = null;
         if(from != null){
             fromDate = new Timestamp(from);
@@ -61,7 +61,7 @@ public class MaintenanceAssetLeasedMySQLRepository implements MaintenanceAssetLe
         if(to != null){
             toDate = new Timestamp(to);
         }
-        return maintenanceAssetLeasedJpa.countTotal(fromDate, toDate, searchText);
+        return maintenanceAssetLeasedJpa.countTotal(fromDate, toDate, searchText, status, username);
     }
 
     @Override
@@ -73,5 +73,10 @@ public class MaintenanceAssetLeasedMySQLRepository implements MaintenanceAssetLe
     @Override
     public void delete(String id) {
         maintenanceAssetLeasedJpa.deleteById(id, new Timestamp(Millisecond.now().asLong()));
+    }
+
+    @Override
+    public void changeStatus(String id, Integer status) {
+        maintenanceAssetLeasedJpa.changeStatus(id, status, new Timestamp(Millisecond.now().asLong()));
     }
 }

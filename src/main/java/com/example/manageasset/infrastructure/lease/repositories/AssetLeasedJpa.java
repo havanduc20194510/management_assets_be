@@ -17,4 +17,12 @@ public interface AssetLeasedJpa extends JpaRepository<AssetLeasedEntity, Long> {
     void deleteAllByLeaseContractId(@Param("id") String id);
     @Query("SELECT a FROM AssetLeasedEntity a, MaintenanceAssetEntity m WHERE m.maintenanceAssetLeased.id = :maintenanceId AND a.id = m.assetLeased.id")
     List<AssetLeasedEntity> findByMaintenanceId(@Param("maintenanceId") String maintenanceId);
+    @Query("SELECT COUNT(a)>0 FROM AssetLeasedEntity a WHERE a.asset.id = :assetId")
+    Boolean existedAssetForLeased(@Param("assetId") Long assetId);
+    @Query("SELECT COUNT(a)>0 FROM AssetLeasedEntity a WHERE a.leaseContract.status = 2 AND a.id in :assetLeasedIds")
+    Boolean checkLeaseContractEligibilityToMaintenance(@Param("assetLeasedIds") List<Long> assetLeasedIds);
+    @Query("SELECT COUNT(a)>0 FROM AssetLeasedEntity a, RevokeContractEntity r WHERE a.id in :assetLeasedIds " +
+            "AND a.leaseContract.id = r.leaseContract.id " +
+            "AND r.isDeleted = false")
+    Boolean checkLeaseContractExistedRevoke(@Param("assetLeasedIds") List<Long> assetLeasedIds);
 }

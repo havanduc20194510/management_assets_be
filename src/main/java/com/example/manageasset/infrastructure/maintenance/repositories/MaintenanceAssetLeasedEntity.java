@@ -2,6 +2,7 @@ package com.example.manageasset.infrastructure.maintenance.repositories;
 
 import com.example.manageasset.domain.maintenance.models.MaintenanceAssetLeased;
 import com.example.manageasset.domain.shared.models.Millisecond;
+import com.example.manageasset.domain.shared.models.Status;
 import com.example.manageasset.infrastructure.user.repositories.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,8 +36,10 @@ public class MaintenanceAssetLeasedEntity {
     private Timestamp updatedAt;
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
+    @Column(name = "status", nullable = false)
+    private Integer status;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private UserEntity user;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id", nullable = false)
@@ -52,7 +55,8 @@ public class MaintenanceAssetLeasedEntity {
                 new Timestamp(maintenanceAssetLeased.getCreatedAt().asLong()),
                 new Timestamp(maintenanceAssetLeased.getUpdatedAt().asLong()),
                 maintenanceAssetLeased.getIsDeleted(),
-                UserEntity.fromModel(maintenanceAssetLeased.getUser()),
+                maintenanceAssetLeased.getStatus().asInt(),
+                maintenanceAssetLeased.getUser() == null ? null : UserEntity.fromModel(maintenanceAssetLeased.getUser()),
                 UserEntity.fromModel(maintenanceAssetLeased.getClient())
         );
     }
@@ -61,14 +65,15 @@ public class MaintenanceAssetLeasedEntity {
         return new MaintenanceAssetLeased(
                 id,
                 client.toModel(),
-                user.toModel(),
+                user == null ? null : user.toModel(),
                 reason,
                 new Millisecond(completedAt.getTime()),
                 new Millisecond(startedAt.getTime()),
                 note,
                 new Millisecond(createdAt.getTime()),
                 new Millisecond(updatedAt.getTime()),
-                isDeleted
+                isDeleted,
+                new Status(status)
         );
     }
 }

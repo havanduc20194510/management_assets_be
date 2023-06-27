@@ -29,7 +29,7 @@ public class MaintenanceAssetLeased {
     private Boolean isDeleted;
     private Status status;
 
-    public MaintenanceAssetLeased(String id, User client, User user, String reason, Millisecond completedAt, Millisecond startedAt, String note, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted) {
+    public MaintenanceAssetLeased(String id, User client, User user, String reason, Millisecond completedAt, Millisecond startedAt, String note, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted, Status status) {
         this.id = id;
         this.client = client;
         this.user = user;
@@ -40,18 +40,30 @@ public class MaintenanceAssetLeased {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isDeleted = isDeleted;
+        this.status = status;
     }
 
-    public static MaintenanceAssetLeased create(String id, User client, User user, String reason, Millisecond completedAt, Millisecond startedAt, String note){
+    public MaintenanceAssetLeased(String id, User client, String reason, Millisecond completedAt, Millisecond startedAt, String note, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted, Status status) {
+        this.id = id;
+        this.client = client;
+        this.reason = reason;
+        this.completedAt = completedAt;
+        this.startedAt = startedAt;
+        this.note = note;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.isDeleted = isDeleted;
+        this.status = status;
+    }
+
+    public static MaintenanceAssetLeased create(String id, User client, String reason, Millisecond completedAt, Millisecond startedAt, String note){
         validate(id, reason);
-        return new MaintenanceAssetLeased(id, client, user, reason, completedAt, startedAt, note, Millisecond.now(), Millisecond.now(), false);
+        return new MaintenanceAssetLeased(id, client, reason, completedAt, startedAt, note, Millisecond.now(), Millisecond.now(), false, Status.INPROGRESS);
     }
 
-    public void update(User client, User user, String reason, Millisecond completedAt, Millisecond startedAt, String note){
+    public void update(String reason, Millisecond completedAt, Millisecond startedAt, String note){
         validate(reason);
 
-        this.client = client;
-        this.user = user;
         this.reason = reason;
         this.completedAt = completedAt;
         this.startedAt = startedAt;

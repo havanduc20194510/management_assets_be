@@ -15,11 +15,11 @@ import java.util.List;
 @RequestMapping("/maintenance-asset-leased")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-public class ListMaintenanceAssetLeasedController {
+public class ListMaintenanceAssetLeasedOfCurrentUserController {
     private final ListMaintenanceAssetLeasedService listMaintenanceAssetLeasedService;
 
-    @GetMapping("/list")
-    public ResponseEntity<?> list(@RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
+    @GetMapping("/list-by-user")
+    public ResponseEntity<?> listByUser(@RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
                                   @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
                                   @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
                                   @RequestParam(value = "from", required = false) Long from,
