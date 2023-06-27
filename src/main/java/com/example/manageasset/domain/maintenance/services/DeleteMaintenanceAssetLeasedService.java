@@ -6,6 +6,8 @@ import com.example.manageasset.domain.maintenance.repositories.MaintenanceAssetR
 import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,9 @@ public class DeleteMaintenanceAssetLeasedService {
         if (maintenanceAssetLeased == null)
             throw new NotFoundException(String.format("MaintenanceAssetLeased[id=%s] not found", id));
 
-        String username = "cuongpm";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
         if(!maintenanceAssetLeased.getClient().getUsername().equals(username))
             throw new InvalidDataException("Client deleting this maintenance asset leased is not client create");
         

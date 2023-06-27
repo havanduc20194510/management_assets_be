@@ -55,7 +55,7 @@ public class LeaseContractMySQLRepository implements LeaseContractRepository {
     }
 
     @Override
-    public List<LeaseContract> list(QueryFilter queryFilter, String searchText, Long leasedAtFrom, Long leasedAtTo, Status status) {
+    public List<LeaseContract> list(QueryFilter queryFilter, String searchText, Long leasedAtFrom, Long leasedAtTo, Status status, String username) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<LeaseContractEntity> criteriaQuery = criteriaBuilder.createQuery(LeaseContractEntity.class);
         Root<LeaseContractEntity> root = criteriaQuery.from(LeaseContractEntity.class);
@@ -98,6 +98,12 @@ public class LeaseContractMySQLRepository implements LeaseContractRepository {
             );
         }
 
+        if(username != null){
+            listPredicateAnd.add(
+                    criteriaBuilder.equal(root.get("client").get("username"), username)
+            );
+        }
+
         Predicate predicateAnd
                 = criteriaBuilder.and(listPredicateAnd.toArray(new Predicate[0]));
 
@@ -115,7 +121,7 @@ public class LeaseContractMySQLRepository implements LeaseContractRepository {
     }
 
     @Override
-    public long totalList(String searchText, Long leasedAtFrom, Long leasedAtTo, Status status) {
+    public long totalList(String searchText, Long leasedAtFrom, Long leasedAtTo, Status status, String username) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         Root<LeaseContractEntity> root = criteriaQuery.from(LeaseContractEntity.class);
@@ -155,6 +161,12 @@ public class LeaseContractMySQLRepository implements LeaseContractRepository {
         if(status != null){
             listPredicateAnd.add(
                     criteriaBuilder.equal(root.get("status"), status.asInt())
+            );
+        }
+
+        if(username != null){
+            listPredicateAnd.add(
+                    criteriaBuilder.equal(root.get("client").get("username"), username)
             );
         }
 

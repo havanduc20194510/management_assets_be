@@ -16,6 +16,8 @@ import com.example.manageasset.domain.shared.utility.ULID;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +34,8 @@ public class CreateRevokeContractService {
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void create(RevokeContractDto revokeContractDto) throws NotFoundException {
-        String username = "cuongpm";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
         User user = userRepository.findByUsername(username);
         if (user == null)
             throw new NotFoundException(String.format("User[id=%d] not found", revokeContractDto.getUserDto().getId()));

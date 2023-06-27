@@ -14,6 +14,8 @@ import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.shared.models.Status;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +48,8 @@ public class UpdateLeaseContractService {
 
         checkProcessLeaseContractService.check(leaseContract);
 
-        String username = "cuongpm";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
         if(!leaseContract.getClient().getUsername().equals(username)) throw new  InvalidDataException("Client is updating lease contract is not client create lease contract");
 
         leaseContract.update(leaseContractDto.getReason(), new Millisecond(leaseContractDto.getRevokedAt()), new Millisecond(leaseContractDto.getLeasedAt()), leaseContractDto.getNote());
@@ -80,15 +83,29 @@ public class UpdateLeaseContractService {
         return assetLeaseds.stream().filter(assetLeased -> Objects.equals(assetLeased.getAsset().getId(), assetId)).findAny().orElse(null);
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void updateStatus(String id, Integer status) throws NotFoundException {
-        String username = "cuongpm";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
         User user = userRepository.findByUsername(username);
 
         LeaseContract leaseContract = leaseContractRepository.findById(id);
         if (leaseContract == null) throw new NotFoundException(String.format("LeaseContract[id=%s] not found", id));
 
+        checkProcessLeaseContractService.check(leaseContract);
+
         leaseContract.update(new Status(status), user);
 
         leaseContractRepository.save(leaseContract);
+
+        if(status == Status.REJECT_TYPE){
+            for (AssetLeased assetLeased : leaseContract.getAssetLeaseds()) {
+                Asset asset = assetRepository.getById(assetLeased.getAsset().getId());
+                if (asset == null) continue;
+
+                int quantity = asset.getQuantity();
+                assetRepository.updateQuantity(quantity + assetLeased.getQuantityLease(), asset.getId());
+            }
+        }
     }
 }
