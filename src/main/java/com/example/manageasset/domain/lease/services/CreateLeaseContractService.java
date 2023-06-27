@@ -13,6 +13,8 @@ import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.shared.utility.ULID;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +38,8 @@ public class CreateLeaseContractService {
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void create(LeaseContractDto leaseContractDto) throws NotFoundException {
-        String username = "cuongpm";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
         User client = userRepository.findByUsername(username);
         if (client == null)
             throw new NotFoundException(String.format("Client[id=%d] not found", leaseContractDto.getClientDto().getId()));

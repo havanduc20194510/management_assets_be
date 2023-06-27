@@ -14,6 +14,8 @@ import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +37,8 @@ public class UpdateMaintenanceAssetLeasedService {
         if (maintenanceAssetLeased == null)
             throw new NotFoundException(String.format("MaintenanceAssetLeased[id=%s] not found", maintenanceAssetLeasedDto.getId()));
 
-        String username = "cuongpm";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
         if(!maintenanceAssetLeased.getClient().getUsername().equals(username))
             throw new InvalidDataException("Client updating this maintenance asset leased is not client create");
 

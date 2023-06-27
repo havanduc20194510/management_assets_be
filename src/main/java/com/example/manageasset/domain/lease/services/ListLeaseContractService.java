@@ -7,6 +7,8 @@ import com.example.manageasset.domain.shared.models.PagingPayload;
 import com.example.manageasset.domain.shared.models.QueryFilter;
 import com.example.manageasset.domain.shared.models.Status;
 import com.example.manageasset.domain.user.dtos.UserDto;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +34,8 @@ public class ListLeaseContractService {
     }
 
     public PagingPayload<List<LeaseContractDto>> listByUser(String searchText, Integer page, Integer limit, String sort, Long leasedAtFrom, Long leasedAtTo, Integer status){
-        String username = "cuongpham";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
 
         QueryFilter filter = QueryFilter.create(limit, page, sort);
         List<LeaseContract> leaseContract = leaseContractRepository.list(filter, searchText, leasedAtFrom, leasedAtTo, status == null ? null : new Status(status), username);

@@ -14,6 +14,8 @@ import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.shared.models.Status;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +48,8 @@ public class UpdateLeaseContractService {
 
         checkProcessLeaseContractService.check(leaseContract);
 
-        String username = "cuongpm";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
         if(!leaseContract.getClient().getUsername().equals(username)) throw new  InvalidDataException("Client is updating lease contract is not client create lease contract");
 
         leaseContract.update(leaseContractDto.getReason(), new Millisecond(leaseContractDto.getRevokedAt()), new Millisecond(leaseContractDto.getLeasedAt()), leaseContractDto.getNote());
@@ -82,7 +85,8 @@ public class UpdateLeaseContractService {
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void updateStatus(String id, Integer status) throws NotFoundException {
-        String username = "cuongpm";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
         User user = userRepository.findByUsername(username);
 
         LeaseContract leaseContract = leaseContractRepository.findById(id);

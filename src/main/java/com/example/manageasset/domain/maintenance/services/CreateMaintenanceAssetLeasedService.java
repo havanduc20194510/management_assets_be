@@ -13,6 +13,8 @@ import com.example.manageasset.domain.shared.utility.ULID;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +32,9 @@ public class CreateMaintenanceAssetLeasedService {
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void create(MaintenanceAssetLeasedDto maintenanceAssetLeasedDto) throws NotFoundException {
-        String username = "cuongpm";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
         User client = userRepository.findByUsername(username);
         if(client == null)
             throw new NotFoundException(String.format("Client[id=%d] not found", maintenanceAssetLeasedDto.getClientDto().getId()));

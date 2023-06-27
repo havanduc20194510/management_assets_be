@@ -9,6 +9,8 @@ import com.example.manageasset.domain.lease.repositories.LeaseContractRepository
 import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
 import com.example.manageasset.domain.user.models.User;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +38,8 @@ public class DeleteLeaseContractService {
 
         checkProcessLeaseContractService.check(leaseContract);
 
-        String username = "cuongpm";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
         if(!leaseContract.getClient().getUsername().equals(username)) throw new  InvalidDataException("Client is deleting lease contract is not client create lease contract");
 
         for (AssetLeased assetLeased : leaseContract.getAssetLeaseds()) {
