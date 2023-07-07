@@ -54,7 +54,7 @@ public class CreateAssetService {
             }
         }
         Asset asset = Asset.create(assetDto.getName(), assetDto.getQuantity(), assetDto.getStatus(), assetDto.getValue(),
-                assetDto.getManagementUnit(), manager, category, attachments);
+                assetDto.getManagementUnit(), manager, category, attachments, assetDto.getDescription());
         assetRepository.save(asset);
     }
 }

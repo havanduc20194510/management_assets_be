@@ -21,6 +21,7 @@ public class Asset {
     private String status;
     private Double value;
     private String managementUnit;
+    private String description;
     private Millisecond createdAt;
     private Millisecond updatedAt;
     private Boolean isDeleted;
@@ -28,7 +29,7 @@ public class Asset {
     private Category category;
     private List<Attachment> attachments;
 
-    public Asset(String name, Integer quantity, String status, Double value, String managementUnit, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted, User manager, Category category, List<Attachment> attachments) {
+    public Asset(String name, Integer quantity, String status, Double value, String managementUnit, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted, User manager, Category category, List<Attachment> attachments, String description) {
         this.name = name;
         this.quantity = quantity;
         this.status = status;
@@ -40,16 +41,17 @@ public class Asset {
         this.manager = manager;
         this.category = category;
         this.attachments = attachments;
+        this.description = description;
     }
 
     public static Asset create(String name, Integer quantity, String status, Double value,
-                               String managementUnit, User manager, Category category, List<Attachment> attachments) {
+                               String managementUnit, User manager, Category category, List<Attachment> attachments, String description) {
         validate(name, quantity, status, value, managementUnit, attachments);
-        return new Asset(name, quantity, status, value, managementUnit, Millisecond.now(), Millisecond.now(), false, manager, category, attachments);
+        return new Asset(name, quantity, status, value, managementUnit, Millisecond.now(), Millisecond.now(), false, manager, category, attachments, description);
     }
 
     public void update(String name, Integer quantity, String status, Double value,
-                               String managementUnit, Category category, List<Attachment> attachments) {
+                               String managementUnit, Category category, List<Attachment> attachments, String description) {
         validate(name, quantity, status, value, managementUnit, attachments);
         this.name = name;
         this.quantity = quantity;
@@ -59,6 +61,7 @@ public class Asset {
         this.updatedAt = Millisecond.now();
         this.category = category;
         this.attachments = attachments;
+        this.description = description;
     }
 
     private static void validate(String name, Integer quantity, String status, Double value, String managementUnit, List<Attachment> attachments) {

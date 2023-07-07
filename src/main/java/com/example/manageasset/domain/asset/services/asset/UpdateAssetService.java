@@ -39,7 +39,7 @@ public class UpdateAssetService {
         }
         if(CollectionUtils.isEmpty(multipartFiles)){
             asset.update(assetDto.getName(), assetDto.getQuantity(), assetDto.getStatus(), assetDto.getValue(),
-                    assetDto.getManagementUnit(), category, asset.getAttachments());
+                    assetDto.getManagementUnit(), category, asset.getAttachments(), assetDto.getDescription());
         }else{
             List<Attachment> attachments = new ArrayList<>();
             for(MultipartFile multipartFile: multipartFiles){
@@ -54,7 +54,7 @@ public class UpdateAssetService {
                 }
             }
             asset.update(assetDto.getName(), assetDto.getQuantity(), assetDto.getStatus(), assetDto.getValue(),
-                    assetDto.getManagementUnit(), category, attachments);
+                    assetDto.getManagementUnit(), category, attachments, assetDto.getDescription());
         }
         assetRepository.save(asset);
     }

@@ -29,6 +29,8 @@ public class AssetEntity {
     private Integer quantity;
     @Column(name = "status", nullable = false)
     private String status;
+    @Column(name = "description")
+    private String description;
     @Column(name = "value", nullable = false)
     private Double value;
     @Column(name = "management_unit", nullable = false)
@@ -58,6 +60,7 @@ public class AssetEntity {
                 asset.getName(),
                 asset.getQuantity(),
                 asset.getStatus(),
+                asset.getDescription(),
                 asset.getValue(),
                 asset.getManagementUnit(),
                 new Timestamp(asset.getCreatedAt().asLong()),
@@ -70,7 +73,7 @@ public class AssetEntity {
     }
 
     public Asset toModel() {
-        return new Asset(id, name, quantity, status, value, managementUnit, new Millisecond(createdAt.getTime()),
+        return new Asset(id, name, quantity, status, value, managementUnit, description, new Millisecond(createdAt.getTime()),
                 new Millisecond(updatedAt.getTime()), isDeleted, manager.toModel(), category.toModel(),
                 attachments.stream().map(AttachmentEntity::toDomain).collect(Collectors.toList()));
     }

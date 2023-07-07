@@ -24,6 +24,7 @@ public class AssetDto {
     private Integer quantity;
     private String status;
     private Double value;
+    private String description;
     @JsonProperty("management_unit")
     private String managementUnit;
     @JsonProperty("created_at")
@@ -36,6 +37,7 @@ public class AssetDto {
 
     public static AssetDto fromModel(Asset asset) {
         return new AssetDto(asset.getId(), asset.getName(), asset.getQuantity(), asset.getStatus(), asset.getValue(),
+                asset.getDescription(),
                 asset.getManagementUnit(), asset.getCreatedAt().asLong(), asset.getUpdatedAt().asLong(),
                 UserDto.fromModel(asset.getManager()),
                 CategoryDto.fromModel(asset.getCategory()),
