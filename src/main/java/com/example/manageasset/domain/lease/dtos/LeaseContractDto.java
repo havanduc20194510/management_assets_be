@@ -44,7 +44,7 @@ public class LeaseContractDto {
         return new LeaseContractDto(
                 leaseContract.getId(),
                 UserDto.fromModel(leaseContract.getClient()),
-                UserDto.fromModel(leaseContract.getUser()),
+                leaseContract.getUser() == null ? null : UserDto.fromModel(leaseContract.getUser()),
                 leaseContract.getReason(),
                 leaseContract.getRevokedAt().asLong(),
                 leaseContract.getLeasedAt().asLong(),

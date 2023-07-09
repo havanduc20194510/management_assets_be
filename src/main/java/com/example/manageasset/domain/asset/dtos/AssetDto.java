@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 public class AssetDto {
     private Long id;
     private String name;
-    private Integer quantity;
     private String status;
     private Double value;
     private String description;
@@ -36,7 +35,7 @@ public class AssetDto {
     private List<AttachmentDto> attachments;
 
     public static AssetDto fromModel(Asset asset) {
-        return new AssetDto(asset.getId(), asset.getName(), asset.getQuantity(), asset.getStatus(), asset.getValue(),
+        return new AssetDto(asset.getId(), asset.getName(), asset.getStatus(), asset.getValue(),
                 asset.getDescription(),
                 asset.getManagementUnit(), asset.getCreatedAt().asLong(), asset.getUpdatedAt().asLong(),
                 UserDto.fromModel(asset.getManager()),

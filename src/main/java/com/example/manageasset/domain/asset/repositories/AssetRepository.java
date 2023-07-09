@@ -11,6 +11,5 @@ public interface AssetRepository {
     Asset getById(Long id);
     void save(Asset asset);
     List<Asset> findByIdIn(List<Long> assetIds);
-    void updateQuantity(Integer quantity, Long assetId);
     Boolean existedAssetInCategory(Long categoryId);
 }

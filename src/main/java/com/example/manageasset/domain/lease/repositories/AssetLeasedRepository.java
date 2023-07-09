@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface AssetLeasedRepository {
     void deleteAllByLeaseContractId(String id);
-    AssetLeased findById(Long id);
+    AssetLeased findByAssetCode(String assetCode);
     List<AssetLeased> findByMaintenanceId(String maintenanceId);
     Boolean existedAssetForLeased(Long assetId);
-    Boolean checkLeaseContractEligibilityToMaintenance(List<Long> assetLeasedIds);
-    Boolean checkLeaseContractExistedRevoke(List<Long> assetLeasedIds);
+    Boolean checkLeaseContractEligibilityToMaintenance(List<String> assetCodes);
+    Boolean checkLeaseContractExistedRevoke(List<String> assetCodes);
 }

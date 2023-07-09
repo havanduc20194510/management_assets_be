@@ -22,8 +22,8 @@ public class MaintenanceAssetEntity {
     private MaintenanceAssetLeasedEntity maintenanceAssetLeased;
 
     @ManyToOne
-    @MapsId("assetLeasedId")
-    @JoinColumn(name = "asset_leased_id")
+    @MapsId("assetCode")
+    @JoinColumn(name = "asset_code")
     private AssetLeasedEntity assetLeased;
 
     public static MaintenanceAssetEntity fromModel(MaintenanceAsset maintenanceAsset){
