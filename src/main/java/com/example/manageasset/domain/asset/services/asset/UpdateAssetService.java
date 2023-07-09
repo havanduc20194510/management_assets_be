@@ -38,7 +38,7 @@ public class UpdateAssetService {
             throw new NotFoundException(String.format("Category[id=%d] not found", assetDto.getCategory().getId()));
         }
         if(CollectionUtils.isEmpty(multipartFiles)){
-            asset.update(assetDto.getName(), assetDto.getQuantity(), assetDto.getStatus(), assetDto.getValue(),
+            asset.update(assetDto.getName(), assetDto.getStatus(), assetDto.getValue(),
                     assetDto.getManagementUnit(), category, asset.getAttachments(), assetDto.getDescription());
         }else{
             List<Attachment> attachments = new ArrayList<>();
@@ -53,7 +53,7 @@ public class UpdateAssetService {
                     attachments.add(attachment);
                 }
             }
-            asset.update(assetDto.getName(), assetDto.getQuantity(), assetDto.getStatus(), assetDto.getValue(),
+            asset.update(assetDto.getName(), assetDto.getStatus(), assetDto.getValue(),
                     assetDto.getManagementUnit(), category, attachments, assetDto.getDescription());
         }
         assetRepository.save(asset);

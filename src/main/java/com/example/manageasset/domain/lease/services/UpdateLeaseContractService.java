@@ -12,6 +12,7 @@ import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
 import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.shared.models.Status;
+import com.example.manageasset.domain.shared.utility.ULID;
 import com.example.manageasset.domain.user.models.User;
 import com.example.manageasset.domain.user.repositories.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -22,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class UpdateLeaseContractService {
@@ -60,27 +60,13 @@ public class UpdateLeaseContractService {
             if (asset == null)
                 throw new NotFoundException(String.format("Asset[id=%d] not found", assetLeasedDto.getAssetDto().getId()));
 
-            int quantity = asset.getQuantity();
-            AssetLeased assetLeasedExist = findById(asset.getId(), leaseContract.getAssetLeaseds());
-            if (assetLeasedExist != null) quantity += assetLeasedExist.getQuantityLease();
-
-            if (quantity < assetLeasedDto.getQuantityLease()) {
-                throw new InvalidDataException(String.format("Asset[id=%d] have inventory quantity less leased quantity", assetLeasedDto.getAssetDto().getId()));
-            }
-            assetLeaseds.add(AssetLeased.create(assetLeasedDto.getId(), assetLeasedDto.getQuantityLease(), asset));
-            assetRepository.updateQuantity(quantity - assetLeasedDto.getQuantityLease(), asset.getId());
+            assetLeaseds.add(AssetLeased.create(new ULID().nextULID(), asset));
         }
         leaseContract.setAssetLeaseds(assetLeaseds);
 
         assetLeasedRepository.deleteAllByLeaseContractId(leaseContract.getId());
 
         leaseContractRepository.save(leaseContract);
-
-
-    }
-
-    private AssetLeased findById(Long assetId, List<AssetLeased> assetLeaseds){
-        return assetLeaseds.stream().filter(assetLeased -> Objects.equals(assetLeased.getAsset().getId(), assetId)).findAny().orElse(null);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -97,15 +83,5 @@ public class UpdateLeaseContractService {
         leaseContract.update(new Status(status), user);
 
         leaseContractRepository.save(leaseContract);
-
-        if(status == Status.REJECT_TYPE){
-            for (AssetLeased assetLeased : leaseContract.getAssetLeaseds()) {
-                Asset asset = assetRepository.getById(assetLeased.getAsset().getId());
-                if (asset == null) continue;
-
-                int quantity = asset.getQuantity();
-                assetRepository.updateQuantity(quantity + assetLeased.getQuantityLease(), asset.getId());
-            }
-        }
     }
 }

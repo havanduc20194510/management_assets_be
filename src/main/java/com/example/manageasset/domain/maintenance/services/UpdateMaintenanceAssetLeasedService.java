@@ -52,9 +52,9 @@ public class UpdateMaintenanceAssetLeasedService {
 
         List<AssetLeased> assetLeaseds = new ArrayList<>();
         for (AssetLeasedDto assetLeasedDto : maintenanceAssetLeasedDto.getAssetLeasedDtos()) {
-            AssetLeased assetLeased = assetLeasedRepository.findById(assetLeasedDto.getId());
+            AssetLeased assetLeased = assetLeasedRepository.findByAssetCode(assetLeasedDto.getAssetCode());
             if (assetLeased == null)
-                throw new NotFoundException(String.format("AssetLeased[id=%d] not found", assetLeasedDto.getId()));
+                throw new NotFoundException(String.format("AssetLeased[id=%s] not found", assetLeasedDto.getAssetCode()));
             assetLeaseds.add(assetLeased);
         }
 

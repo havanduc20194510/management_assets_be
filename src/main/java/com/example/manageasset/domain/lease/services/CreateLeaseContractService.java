@@ -7,7 +7,6 @@ import com.example.manageasset.domain.lease.dtos.LeaseContractDto;
 import com.example.manageasset.domain.lease.models.AssetLeased;
 import com.example.manageasset.domain.lease.models.LeaseContract;
 import com.example.manageasset.domain.lease.repositories.LeaseContractRepository;
-import com.example.manageasset.domain.shared.exceptions.InvalidDataException;
 import com.example.manageasset.domain.shared.exceptions.NotFoundException;
 import com.example.manageasset.domain.shared.models.Millisecond;
 import com.example.manageasset.domain.shared.utility.ULID;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CreateLeaseContractService {
@@ -51,12 +49,8 @@ public class CreateLeaseContractService {
             Asset asset = assetRepository.getById(assetLeasedDto.getAssetDto().getId());
             if (asset == null)
                 throw new NotFoundException(String.format("Asset[id=%d] not found", assetLeasedDto.getAssetDto().getId()));
-            int quantity = asset.getQuantity();
-            if (quantity < assetLeasedDto.getQuantityLease()) {
-                throw new InvalidDataException(String.format("Asset[id=%d] have inventory quantity less leased quantity", assetLeasedDto.getAssetDto().getId()));
-            }
-            assetLeaseds.add(AssetLeased.create(assetLeasedDto.getQuantityLease(), asset));
-            assetRepository.updateQuantity(quantity - assetLeasedDto.getQuantityLease(), asset.getId());
+
+            assetLeaseds.add(AssetLeased.create(new ULID().nextULID(), asset));
         }
         leaseContract.setAssetLeaseds(assetLeaseds);
 

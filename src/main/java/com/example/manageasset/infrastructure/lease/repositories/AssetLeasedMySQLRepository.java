@@ -22,9 +22,9 @@ public class AssetLeasedMySQLRepository implements AssetLeasedRepository {
     }
 
     @Override
-    public AssetLeased findById(Long id) {
-        Optional<AssetLeasedEntity> opt = assetLeasedJpa.findById(id);
-        return opt.map(AssetLeasedEntity::toModel).orElse(null);
+    public AssetLeased findByAssetCode(String assetCode) {
+        AssetLeasedEntity assetLeasedEntity = assetLeasedJpa.findByAssetCode(assetCode);
+        return assetLeasedEntity == null ? null : assetLeasedEntity.toModel();
     }
 
     @Override
@@ -38,12 +38,12 @@ public class AssetLeasedMySQLRepository implements AssetLeasedRepository {
     }
 
     @Override
-    public Boolean checkLeaseContractEligibilityToMaintenance(List<Long> assetLeasedIds) {
-        return assetLeasedJpa.checkLeaseContractEligibilityToMaintenance(assetLeasedIds);
+    public Boolean checkLeaseContractEligibilityToMaintenance(List<String> assetCodes) {
+        return assetLeasedJpa.checkLeaseContractEligibilityToMaintenance(assetCodes);
     }
 
     @Override
-    public Boolean checkLeaseContractExistedRevoke(List<Long> assetLeasedIds) {
-        return assetLeasedJpa.checkLeaseContractExistedRevoke(assetLeasedIds);
+    public Boolean checkLeaseContractExistedRevoke(List<String> assetCodes) {
+        return assetLeasedJpa.checkLeaseContractExistedRevoke(assetCodes);
     }
 }
