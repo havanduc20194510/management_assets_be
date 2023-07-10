@@ -15,8 +15,8 @@ public class MaintenanceAssetMySQLRepository implements MaintenanceAssetReposito
     }
 
     @Override
-    public boolean existedMaintenanceAssetLeased(Long id) {
-        return maintenanceAssetJpa.existedMaintenanceAssetLeased(id);
+    public boolean existedMaintenanceAssetLeased(String assetCode) {
+        return maintenanceAssetJpa.existedMaintenanceAssetLeased(assetCode);
     }
 
 }

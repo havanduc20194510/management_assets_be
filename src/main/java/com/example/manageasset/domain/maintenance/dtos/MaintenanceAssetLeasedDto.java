@@ -50,7 +50,7 @@ public class MaintenanceAssetLeasedDto {
         return new MaintenanceAssetLeasedDto(
                 maintenanceAssetLeased.getId(),
                 UserDto.fromModel(maintenanceAssetLeased.getClient()),
-                UserDto.fromModel(maintenanceAssetLeased.getUser()),
+                maintenanceAssetLeased.getUser() == null ? null : UserDto.fromModel(maintenanceAssetLeased.getUser()),
                 maintenanceAssetLeased.getReason(),
                 maintenanceAssetLeased.getCompletedAt().asLong(),
                 maintenanceAssetLeased.getStartedAt().asLong(),

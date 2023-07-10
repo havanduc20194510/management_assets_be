@@ -41,20 +41,20 @@ public class CreateMaintenanceAssetLeasedService {
         if(CollectionUtils.isEmpty(maintenanceAssetLeasedDto.getAssetLeasedDtos())){
             throw new InvalidRequestException("List asset leased cannot empty");
         }
-        List<Long> assetLeasedIds = new ArrayList<>();
-        maintenanceAssetLeasedDto.getAssetLeasedDtos().forEach(assetLeasedDto -> assetLeasedIds.add(assetLeasedDto.getId()));
-        if(!assetLeasedRepository.checkLeaseContractEligibilityToMaintenance(assetLeasedIds)){
+        List<String> assetCodes = new ArrayList<>();
+        maintenanceAssetLeasedDto.getAssetLeasedDtos().forEach(assetLeasedDto -> assetCodes.add(assetLeasedDto.getAssetCode()));
+        if(!assetLeasedRepository.checkLeaseContractEligibilityToMaintenance(assetCodes)){
             throw new InvalidRequestException("LeaseContract not approved yet");
         }
-        if(assetLeasedRepository.checkLeaseContractExistedRevoke(assetLeasedIds))
+        if(assetLeasedRepository.checkLeaseContractExistedRevoke(assetCodes))
             throw new InvalidRequestException("LeaseContract have a revoke, cannot create maintenance");
         MaintenanceAssetLeased maintenanceAssetLeased = MaintenanceAssetLeased.create(new ULID().nextULID(), client, maintenanceAssetLeasedDto.getReason(), new Millisecond(maintenanceAssetLeasedDto.getCompletedAt()), new Millisecond(maintenanceAssetLeasedDto.getStartedAt()), maintenanceAssetLeasedDto.getNote());
 
         List<AssetLeased> assetLeaseds = new ArrayList<>();
         for (AssetLeasedDto assetLeasedDto : maintenanceAssetLeasedDto.getAssetLeasedDtos()) {
-            AssetLeased assetLeased = assetLeasedRepository.findById(assetLeasedDto.getId());
+            AssetLeased assetLeased = assetLeasedRepository.findByAssetCode(assetLeasedDto.getAssetCode());
             if (assetLeased == null)
-                throw new NotFoundException(String.format("AssetLeased[id=%d] not found", assetLeasedDto.getId()));
+                throw new NotFoundException(String.format("AssetLeased[id=%s] not found", assetLeasedDto.getAssetCode()));
             assetLeaseds.add(assetLeased);
         }
 

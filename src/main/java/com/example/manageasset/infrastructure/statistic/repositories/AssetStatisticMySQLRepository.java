@@ -26,7 +26,7 @@ public class AssetStatisticMySQLRepository implements AssetStatisticRepository {
         String sql = "SELECT a.id, COALESCE(tbl_a.tong_sl, 0) as total_quantity_not_process, COALESCE(tbl_b.tong_sl, 0) as total_quantity_leased" +
                 " FROM assets as a" +
                 " LEFT JOIN (" +
-                " SELECT al.asset_id, SUM(al.quantity_lease) as tong_sl" +
+                " SELECT al.asset_id, COUNT(al.asset_id) as tong_sl" +
                 " FROM asset_leaseds as al" +
                 " INNER JOIN lease_contracts as lc ON al.lease_contract_id = lc.id" +
                 " WHERE lc.is_deleted = false" +
@@ -40,7 +40,7 @@ public class AssetStatisticMySQLRepository implements AssetStatisticRepository {
         sql +=  " GROUP BY al.asset_id" +
                 " ) as tbl_a ON a.id = tbl_a.asset_id" +
                 " LEFT JOIN (" +
-                " SELECT al.asset_id, SUM(al.quantity_lease) as tong_sl" +
+                " SELECT al.asset_id, COUNT(al.asset_id) as tong_sl" +
                 " FROM asset_leaseds as al" +
                 " INNER JOIN lease_contracts as lc ON al.lease_contract_id = lc.id" +
                 " WHERE lc.is_deleted = false" +
@@ -85,7 +85,7 @@ public class AssetStatisticMySQLRepository implements AssetStatisticRepository {
         String sql = "SELECT COUNT(*)" +
                 " FROM assets as a" +
                 " LEFT JOIN (" +
-                " SELECT al.asset_id, SUM(al.quantity_lease) as tong_sl" +
+                " SELECT al.asset_id, COUNT(al.asset_id) as tong_sl" +
                 " FROM asset_leaseds as al" +
                 " INNER JOIN lease_contracts as lc ON al.lease_contract_id = lc.id" +
                 " WHERE lc.is_deleted = false" +
@@ -99,7 +99,7 @@ public class AssetStatisticMySQLRepository implements AssetStatisticRepository {
         sql +=  " GROUP BY al.asset_id" +
                 " ) as tbl_a ON a.id = tbl_a.asset_id" +
                 " LEFT JOIN (" +
-                " SELECT al.asset_id, SUM(al.quantity_lease) as tong_sl" +
+                " SELECT al.asset_id, COUNT(al.asset_id) as tong_sl" +
                 " FROM asset_leaseds as al" +
                 " INNER JOIN lease_contracts as lc ON al.lease_contract_id = lc.id" +
                 " WHERE lc.is_deleted = false" +

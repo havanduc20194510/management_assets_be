@@ -1,28 +1,30 @@
 package com.example.manageasset.domain.auth;
 
 import com.example.manageasset.domain.shared.exceptions.InvalidRequestException;
+import com.example.manageasset.domain.user.models.User;
+import com.example.manageasset.domain.user.repositories.UserRepository;
 import com.example.manageasset.infrastructure.shared.security.JwtTokenProvider;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import lombok.Data;
-import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LoginUserService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
+    private final UserRepository userRepository;
 
-    public LoginUserService(AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider) {
+    public LoginUserService(AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
+        this.userRepository = userRepository;
     }
 
     public AuthOutput login(AuthInput input) {
@@ -40,7 +42,9 @@ public class LoginUserService {
 
         String token = tokenProvider.generateToken(authentication);
 
-        return AuthOutput.create(token, input.username);
+        User user = userRepository.findByUsername(input.username);
+
+        return AuthOutput.create(token, input.username, user.getPosition());
     }
 
     @Data
@@ -60,14 +64,25 @@ public class LoginUserService {
         @JsonProperty("token_type")
         private String tokenType = "Bearer";
         private String username;
+        private String position;
 
         public AuthOutput(String accessToken, String username) {
             this.accessToken = accessToken;
             this.username = username;
         }
 
+        public AuthOutput(String accessToken, String username, String position) {
+            this.accessToken = accessToken;
+            this.username = username;
+            this.position = position;
+        }
+
         public static AuthOutput create(String accessToken, String username) {
             return new AuthOutput(accessToken, username);
+        }
+
+        public static AuthOutput create(String accessToken, String username, String position) {
+            return new AuthOutput(accessToken, username, position);
         }
     }
 }

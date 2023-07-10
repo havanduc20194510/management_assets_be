@@ -1,8 +1,6 @@
 package com.example.manageasset.domain.revoke.services;
 
-import com.example.manageasset.domain.asset.models.Asset;
 import com.example.manageasset.domain.asset.repositories.AssetRepository;
-import com.example.manageasset.domain.lease.models.AssetLeased;
 import com.example.manageasset.domain.lease.models.LeaseContract;
 import com.example.manageasset.domain.lease.repositories.LeaseContractRepository;
 import com.example.manageasset.domain.revoke.dtos.RevokeContractDto;
@@ -21,8 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -49,14 +45,6 @@ public class CreateRevokeContractService {
             throw new InvalidRequestException(String.format("LeaseContract[id=%s] was revoked", revokeContractDto.getLeaseContractDto().getId()));
         RevokeContract revokeContract = RevokeContract.create(new ULID().nextULID(), user, revokeContractDto.getReason(), new Millisecond(revokeContractDto.getRevokedAt()), revokeContractDto.getNote(), leaseContract);
 
-        List<AssetLeased> assetLeaseds = leaseContract.getAssetLeaseds();
-        for(AssetLeased assetLeased: assetLeaseds){
-            Asset asset = assetRepository.getById(assetLeased.getAsset().getId());
-            if (asset == null)
-                throw new NotFoundException(String.format("Asset[id=%d] not found", assetLeased.getAsset().getId()));
-            int quantity = asset.getQuantity();
-            assetRepository.updateQuantity(quantity + assetLeased.getQuantityLease(), asset.getId());
-        }
         revokeContractRepository.save(revokeContract);
     }
 }

@@ -17,10 +17,10 @@ import java.util.List;
 public class Asset {
     private Long id;
     private String name;
-    private Integer quantity;
     private String status;
     private Double value;
     private String managementUnit;
+    private String description;
     private Millisecond createdAt;
     private Millisecond updatedAt;
     private Boolean isDeleted;
@@ -28,9 +28,8 @@ public class Asset {
     private Category category;
     private List<Attachment> attachments;
 
-    public Asset(String name, Integer quantity, String status, Double value, String managementUnit, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted, User manager, Category category, List<Attachment> attachments) {
+    public Asset(String name, String status, Double value, String managementUnit, Millisecond createdAt, Millisecond updatedAt, Boolean isDeleted, User manager, Category category, List<Attachment> attachments, String description) {
         this.name = name;
-        this.quantity = quantity;
         this.status = status;
         this.value = value;
         this.managementUnit = managementUnit;
@@ -40,33 +39,31 @@ public class Asset {
         this.manager = manager;
         this.category = category;
         this.attachments = attachments;
+        this.description = description;
     }
 
-    public static Asset create(String name, Integer quantity, String status, Double value,
-                               String managementUnit, User manager, Category category, List<Attachment> attachments) {
-        validate(name, quantity, status, value, managementUnit, attachments);
-        return new Asset(name, quantity, status, value, managementUnit, Millisecond.now(), Millisecond.now(), false, manager, category, attachments);
+    public static Asset create(String name, String status, Double value,
+                               String managementUnit, User manager, Category category, List<Attachment> attachments, String description) {
+        validate(name, status, value, managementUnit, attachments);
+        return new Asset(name, status, value, managementUnit, Millisecond.now(), Millisecond.now(), false, manager, category, attachments, description);
     }
 
-    public void update(String name, Integer quantity, String status, Double value,
-                               String managementUnit, Category category, List<Attachment> attachments) {
-        validate(name, quantity, status, value, managementUnit, attachments);
+    public void update(String name, String status, Double value,
+                               String managementUnit, Category category, List<Attachment> attachments, String description) {
+        validate(name, status, value, managementUnit, attachments);
         this.name = name;
-        this.quantity = quantity;
         this.status = status;
         this.value = value;
         this.managementUnit = managementUnit;
         this.updatedAt = Millisecond.now();
         this.category = category;
         this.attachments = attachments;
+        this.description = description;
     }
 
-    private static void validate(String name, Integer quantity, String status, Double value, String managementUnit, List<Attachment> attachments) {
+    private static void validate(String name, String status, Double value, String managementUnit, List<Attachment> attachments) {
         if(Strings.isNullOrEmpty(name)){
             throw new InvalidDataException("Required field [name]");
-        }
-        if(quantity == null){
-            throw new InvalidDataException("Required field [quantity]");
         }
         if(Strings.isNullOrEmpty(status)){
             throw new InvalidDataException("Required field [status]");

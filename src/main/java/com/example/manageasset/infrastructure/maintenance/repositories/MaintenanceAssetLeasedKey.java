@@ -15,6 +15,6 @@ public class MaintenanceAssetLeasedKey implements Serializable {
     @Column(name = "maintenance_id")
     private String maintenanceId;
 
-    @Column(name = "asset_leased_id")
-    private Long assetLeasedId;
+    @Column(name = "asset_code")
+    private String assetCode;
 }

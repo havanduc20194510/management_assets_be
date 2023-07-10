@@ -19,10 +19,11 @@ public interface AssetLeasedJpa extends JpaRepository<AssetLeasedEntity, Long> {
     List<AssetLeasedEntity> findByMaintenanceId(@Param("maintenanceId") String maintenanceId);
     @Query("SELECT COUNT(a)>0 FROM AssetLeasedEntity a WHERE a.asset.id = :assetId")
     Boolean existedAssetForLeased(@Param("assetId") Long assetId);
-    @Query("SELECT COUNT(a)>0 FROM AssetLeasedEntity a WHERE a.leaseContract.status = 2 AND a.id in :assetLeasedIds")
-    Boolean checkLeaseContractEligibilityToMaintenance(@Param("assetLeasedIds") List<Long> assetLeasedIds);
-    @Query("SELECT COUNT(a)>0 FROM AssetLeasedEntity a, RevokeContractEntity r WHERE a.id in :assetLeasedIds " +
+    @Query("SELECT COUNT(a)>0 FROM AssetLeasedEntity a WHERE a.leaseContract.status = 2 AND a.assetCode in :assetCodes")
+    Boolean checkLeaseContractEligibilityToMaintenance(@Param("assetCodes") List<String> assetCodes);
+    @Query("SELECT COUNT(a)>0 FROM AssetLeasedEntity a, RevokeContractEntity r WHERE a.assetCode in :assetCodes " +
             "AND a.leaseContract.id = r.leaseContract.id " +
             "AND r.isDeleted = false")
-    Boolean checkLeaseContractExistedRevoke(@Param("assetLeasedIds") List<Long> assetLeasedIds);
+    Boolean checkLeaseContractExistedRevoke(@Param("assetCodes") List<String> assetCodes);
+    AssetLeasedEntity findByAssetCode(String assetCode);
 }

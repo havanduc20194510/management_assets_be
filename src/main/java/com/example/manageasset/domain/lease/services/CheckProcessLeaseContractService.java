@@ -24,7 +24,7 @@ public class CheckProcessLeaseContractService {
         }
 
         for (AssetLeased assetLeased : leaseContract.getAssetLeaseds()){
-            if(maintenanceAssetRepository.existedMaintenanceAssetLeased(assetLeased.getId()))
+            if(maintenanceAssetRepository.existedMaintenanceAssetLeased(assetLeased.getAssetCode()))
                 throw new InvalidDataException(String.format("LeaseContract[id=%s] had asset leased maintenance, not delete or update lease contract", leaseContract.getId()));
         }
     }
