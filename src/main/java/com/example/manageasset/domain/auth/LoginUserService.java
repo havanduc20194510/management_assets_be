@@ -44,7 +44,7 @@ public class LoginUserService {
 
         User user = userRepository.findByUsername(input.username);
 
-        return AuthOutput.create(token, input.username, user.getPosition());
+        return AuthOutput.create(token, user.getId(), input.username, user.getPosition());
     }
 
     @Data
@@ -63,8 +63,11 @@ public class LoginUserService {
         private String accessToken;
         @JsonProperty("token_type")
         private String tokenType = "Bearer";
+
+        private Long id;
         private String username;
         private String position;
+
 
         public AuthOutput(String accessToken, String username) {
             this.accessToken = accessToken;
@@ -77,12 +80,23 @@ public class LoginUserService {
             this.position = position;
         }
 
+        public AuthOutput(String accessToken, Long id, String username, String position) {
+            this.accessToken = accessToken;
+            this.id = id;
+            this.username = username;
+            this.position = position;
+        }
+
         public static AuthOutput create(String accessToken, String username) {
             return new AuthOutput(accessToken, username);
         }
 
         public static AuthOutput create(String accessToken, String username, String position) {
             return new AuthOutput(accessToken, username, position);
+        }
+
+        public static AuthOutput create(String accessToken, Long id, String username, String position) {
+            return new AuthOutput(accessToken, id, username, position);
         }
     }
 }
