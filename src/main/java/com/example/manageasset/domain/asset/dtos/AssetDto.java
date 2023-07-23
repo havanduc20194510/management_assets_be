@@ -34,7 +34,7 @@ public class AssetDto {
     private UserDto manager;
     private CategoryDto category;
     private List<AttachmentDto> attachments;
-    private int state;
+    private Integer state;
 
     public static AssetDto fromModel(Asset asset) {
         return new AssetDto(asset.getId(), asset.getName(), asset.getStatus(), asset.getValue(),
